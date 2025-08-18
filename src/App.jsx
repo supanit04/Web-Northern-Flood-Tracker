@@ -15,6 +15,9 @@ function Home() {
       <button >
         Next Page
       </button>
+      <button >
+        Next Page
+      </button>
     </>
   )
 }
