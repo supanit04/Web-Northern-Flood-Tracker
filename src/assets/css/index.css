@@ -23,16 +23,18 @@ a:hover {
 }
 
 body {
+  background-color: rgb(19, 34, 132);
+  color: white;
   margin: 0;
   display: flex;
-  place-items: center;
+  /* place-items: center; */
   min-width: 320px;
   min-height: 100vh;
 }
 
 h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+  /* font-size: 3.2em;
+  line-height: 1.1; */
 }
 
 button {

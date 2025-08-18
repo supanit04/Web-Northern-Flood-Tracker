@@ -12,6 +12,9 @@ function Home() {
       <button onClick={() => navigate('/agency')}>
         Next Page
       </button>
+      <button >
+        Next Page
+      </button>
     </>
   )
 }
