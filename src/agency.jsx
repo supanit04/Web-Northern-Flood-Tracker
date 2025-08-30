@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import './agency.css'; // ✅ import css แยกของหน้านี้
+import "./assets/css/agency.css";
 
 function Agency() {
   const navigate = useNavigate();
@@ -15,7 +15,7 @@ function Agency() {
           </div>
         </div>
         <nav>
-          <button className="btn text-light" onClick={() => navigate('/App')}>
+          <button className="btn text-light" onClick={() => navigate('/')}>
             Home
           </button>
           <button className="btn text-light" onClick={() => navigate('/agency')}>
@@ -25,8 +25,11 @@ function Agency() {
       </header>
 
       <main className="agency-content">
-        <h1>หน่วยงานที่เกี่ยวข้อง</h1>
-        <p>ข้อมูลและรายชื่อหน่วยงานที่เข้าร่วมในระบบติดตามอุทกภัย</p>
+        <div className="Contener">
+        <h1 className="text-topic">หน่วยงานที่สามารถติดตาม / แจ้งข่าวสาร</h1>
+        </div>
+        <h2 className='emc-contect'>🚨 ติดต่อฉุกเฉิน</h2>
+
       </main>
     </div>
   );
