@@ -1,42 +1,304 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
+ /* Reset and base */
+    * {
+      box-sizing: border-box;
+      font-family: "Sarabun", "Tahoma", sans-serif;
+    }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    }
+    header {
+      background-color: #002080; /* สีน้ำเงินเข้ม */
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 20px;
+    }
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    
+    .title {
+      line-height: 1.2;
+    }
+    .title .th {
+      font-weight: bold;
+      font-size: 16px;
+    }
+    .title .en {
+      font-size: 13px;
+      font-weight: bold;
+    }
+    nav {
+      display: flex;
+      gap: 20px;
+    }
+    nav a {
+      color: #fff;
+      font-weight: bold;
+      text-decoration: none;
+    }
+    nav a:hover {
+      text-decoration: underline;
+    }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+    /* Region buttons container */
+    .region-buttons {
+      margin: 20px 10px 10px 10px;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .region-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      padding: 10px 25px;
+      border: none;
+      border-radius: 20px;
+      color: white;
+      font-weight: 400;
+      font-size: 20px;
+      user-select: none;
+      cursor: pointer;
+      /* box-shadow: 0 2px 5px rgb(0 0 0 / 0.12); */
+      transition: filter 0.25s ease;
+    }
+    .region-button:hover {
+      filter: brightness(1.1);
+    }
+    /* Icons inside buttons are simple inline svg */
+    /* .icon-flood, .icon-house {
+      width: 18px;
+      height: 18px;
+      stroke: white;
+      stroke-width: 1.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      fill: none;
+    } */
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
+    /* Colors for each region category */
+    .red-bg {
+      background-color: #b33939;
+    }
+    .orange-bg {
+      background-color: #d8b64a;
+      /* color: #452b00; */
+    }
+    .green-bg {
+      background-color: #689a82;
+    }
 
-.card {
-  padding: 2em;
-}
+    /* Content main container */
+    main {
+      max-width: 1200px;
+      margin: 0 auto 3rem auto;
+      padding: 0 1rem;
+    }
 
-.read-the-docs {
-  color: #888;
-}
+    /* Title above map */
+    .map-title {
+      /* font-weight: 500; */
+      font-size: 30px;
+      margin-bottom: 0.75rem;
+      user-select: none;
+    }
+
+    /* Layout for map and controls */
+    .content-grid {
+      display: flex;
+      gap: 2rem;
+      flex-wrap: wrap;
+      justify-content: start;
+    }
+
+    /* Map container */
+    .map-container {
+      flex: 1 1 320px;
+      max-width: 420px;
+      background-color: #e5ebf8;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 8px 15px rgb(12 23 74 / 0.15);
+      user-select: none;
+    }
+
+    /* The SVG map */
+    .map-svg {
+      width: 100%;
+      height: auto;
+      display: block;
+      pointer-events: none;
+    }
+    /* Fill colors for provinces on map */
+    .province-chiangrai { fill: #2a4bd7; }
+    .province-chiangmai { fill: #5b431d; }
+    .province-phayao { fill: #68a0e0; }
+    .province-lamppun { fill: #4b4ca7; }
+    .province-lampang { fill: #e4bb5d; }
+    .province-nan { fill: #ad4137; }
+    .province-maehongson { fill: #688f6b; }
+    .province-phrae { fill: #7dceab; }
+    .province-uttaradit { fill: #3f75a0; }
+
+    /* Province labels */
+    .province-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      fill: white;
+      pointer-events: none;
+      text-shadow: 0 0 4px rgba(0,0,0,0.5);
+    }
+
+    /* Filter form container */
+    .filter-container {
+      flex: 1 1 560px;
+      max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    /* Filters form */
+    .filter-form {
+      display: flex;
+      gap: 1rem;
+      user-select: none;
+    }
+    .filter-form select {
+      flex: 1;
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      border: 1.5px solid #999;
+      font-size: 1rem;
+      background-color: white;
+      transition: border-color 0.3s ease;
+    }
+    .filter-form select:hover, .filter-form select:focus {
+      border-color: #012e70;
+      outline: none;
+    }
+
+    /* Table container */
+    .table-wrapper {
+      background: white;
+      border-radius: 12px;
+      padding: 0 0.5rem 0.5rem 0.5rem;
+      box-shadow: 0 8px 12px rgb(0 0 0 / 0.1);
+      max-height: 420px;
+      overflow-y: auto;
+      user-select: text;
+    }
+
+    /* Tables styling */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.925rem;
+      font-weight: 500;
+      color: #303030;
+    }
+    th, td {
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      vertical-align: middle;
+      user-select: text;
+    }
+    th {
+      background: #e6e9f5;
+      font-weight: 700;
+      user-select: none;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    tr:hover {
+      background-color: #f3f7fc;
+    }
+
+    /* Status icons */
+    .status-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: white;
+      font-weight: 700;
+      width: 22px;
+      height: 22px;
+      font-size: 14px;
+      user-select: none;
+    }
+    .status-danger {
+      background: #d9382f;
+    }
+    .status-warning {
+      background: #f2af29;
+      color: #4a3400;
+    }
+
+    /* Pagination & page size controls */
+    .pagination-controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 0.75rem;
+      font-size: 0.9rem;
+      color: #555;
+      user-select: none;
+    }
+    .pagination-controls select {
+      padding: 0.2rem 0.4rem;
+      border-radius: 6px;
+      border: 1.2px solid #bbb;
+      font-size: 1rem;
+      background-color: white;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
+    /* Pagination buttons container */
+    .page-nav {
+      display: flex;
+      gap: 0.3rem;
+      align-items: center;
+    }
+    .page-nav button {
+      all: unset;
+      cursor: pointer;
+      border-radius: 6px;
+      padding: 0.3rem 0.7rem;
+      user-select: none;
+      border: 1.5px solid transparent;
+      font-weight: 600;
+      transition: border-color 0.25s ease, background-color 0.25s ease;
+    }
+    .page-nav button:hover {
+      border-color: #012e70;
+      background-color: #e4e9f8;
+    }
+    .page-nav button:disabled {
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 800px) {
+      .content-grid {
+        flex-direction: column;
+        gap: 2rem;
+      }
+      .filter-form {
+        flex-direction: column;
+      }
+      .filter-form select {
+        width: 100%;
+      }
+    }
