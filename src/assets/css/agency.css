@@ -1,21 +1,13 @@
 .agency-bg {
   position: relative;
   min-height: 100vh;
-  background: url('/bg-flooding.jpg') center/cover no-repeat;
+  background-color: #F6F8FA;
   display: flex;
   flex-direction: column;
-  color: white;
-  z-index: 1;
+  color: #000;
 }
 
-.agency-bg::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #001A80; /* overlay สีน้ำเงิน */
-  opacity: 0.5; /* ครึ่งโปร่ง 50% */
-  z-index: -1; /* วางใต้เนื้อหา */
-}
+
 .Contener{
     background-color: #C7D1F6;
     margin: 30px;
