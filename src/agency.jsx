@@ -3,36 +3,37 @@ import "./assets/css/agency.css";
 
 function Agency() {
   const navigate = useNavigate();
-
-  return (
+  
+  const organizations = [
+    "organization 1",
+    "organization 2",
+    "organization 3",
+    "organization 4",
+    "organization 5",
+  ];
+    return (
     <div className="agency-bg">
-      <header className="agency-header">
-        <div className="logo-area">
-          <img src="/mfu-logo.png" alt="โลโก้" width={50} height={50} />
-          <div className="title">
-            <div className="th">ติดตามสถานการณ์อุทกภัยภาคเหนือ</div>
-            <div className="en">Northern Flood Forecasting System</div>
-          </div>
-        </div>
-        <nav>
-          <button className="btn text-light" onClick={() => navigate('/')}>
-            Home
-          </button>
-          <button className="btn text-light" onClick={() => navigate('/agency')}>
-            Agency
-          </button>
-        </nav>
-      </header>
-
       <main className="agency-content">
-        <div className="Contener">
-        <h1 className="text-topic">หน่วยงานที่สามารถติดตาม / แจ้งข่าวสาร</h1>
+        {/* หัวข้อหลัก */}
+        <div className="Container">
+          <h1 className="text-topic">หน่วยงานที่สามารถติดตาม / แจ้งข่าวสาร</h1>
         </div>
-        <h2 className='emc-contect'>🚨 ติดต่อฉุกเฉิน</h2>
 
+        {/* ติดต่อฉุกเฉิน */}
+        <h2 className="emc-contact">🚨 ติดต่อฉุกเฉิน</h2>
+
+        {/* รายชื่อองค์กร */}
+        <div className="organizations">
+          {organizations.map((org, index) => (
+            <div className="ag-Container" key={index}>
+              <h1 className="text-ag">{org}</h1>
+            </div>
+          ))}
+        </div>
       </main>
     </div>
   );
+
 }
 
 export default Agency;

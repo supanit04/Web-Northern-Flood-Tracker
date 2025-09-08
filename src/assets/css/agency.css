@@ -1,30 +1,50 @@
-.agency-bg {
-  position: relative;
-  min-height: 100vh;
-  background-color: #F6F8FA;
+/* Container หัวข้อหลัก */
+.Container {
+  background-color: #C7D1F6;
+  margin: 30px auto;
+  height: 50px;
+  opacity: 0.85; 
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.text-topic {
+  font-size: 30px;
+  font-weight: 700; 
   color: #000;
 }
 
+/* หัวข้อฉุกเฉิน */
+.emc-contact {
+  margin: 2rem;
+  font-size: 30px;
+  font-weight: 700; 
+  text-align: left;
+}
 
-.Contener{
-    background-color: #C7D1F6;
-    margin: 30px;
-    height: 50px;
-    opacity: 0.85; 
+/* รายชื่อองค์กร */
+.organizations {
+  display: flex;
+  flex-direction: column; /* เรียงแนวตั้ง */
+  align-items: center;    /* จัดแนวนอนกลาง */
+  gap: 1rem;              
 }
-.text-topic {
-    padding: 10px;
-    font-size: 30px;
-    text-align: center;
-    font-weight: 700; 
-    color: #000;
+
+/* Card องค์กร */
+.ag-Container {
+  background-color: white;
+  width: 1200px;
+  height: 70px;
+  opacity: 0.85; 
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.emc-contect{
-    margin: 2rem;
-    text-align:left;
-    font-size: 30px;
-    font-weight: 700; 
-    
+
+.text-ag {
+  font-size: 30px;
+  font-weight: 700; 
+  color: #000;
+  text-align: center;
 }

@@ -36,12 +36,25 @@ html, body {
       text-decoration: underline;
     }
 body {
-
+  position: relative;
+  min-height: 100vh;
+  background: url('/bg-flooding.jpg') center/cover no-repeat;
+  display: flex;
+  flex-direction: column;
   color: white;
-
-  /* background image + overlay โปร่ง */
-  background-color: #F6F8FA;  
+  z-index: 1;
 }
+
+body::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #9CAEF3;
+  opacity: 0.55;
+  z-index: -1;
+}
+
+
 
     header {
       background-color: #002080; /* สีน้ำเงินเข้ม */
