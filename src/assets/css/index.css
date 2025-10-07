@@ -45,16 +45,22 @@ nav a:hover {
 body {
   position: relative;
   min-height: 100vh;
-  background: url('/bg-flooding.jpg') center/cover no-repeat;
+  background-image: url('/bg-flooding.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* ✅ ทำให้พื้นหลังไม่เลื่อน */
   display: flex;
   flex-direction: column;
   color: white;
   z-index: 1;
 }
 
+
+
 body::before {
   content: "";
-  position: absolute;
+  position: fixed; /* ใช้ fixed เพื่อให้ครอบคลุมทั้ง viewport */
   top: 0; left: 0; right: 0; bottom: 0;
   background-color: #9CAEF3;
   opacity: 0.55;

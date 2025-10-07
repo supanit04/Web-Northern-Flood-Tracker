@@ -3,48 +3,175 @@
   background-color: #C7D1F6;
   margin: 30px auto;
   height: 50px;
-  opacity: 0.85; 
+  width: 85%;
+  opacity: 0.85;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 10px;
 }
 
 .text-topic {
   font-size: 30px;
-  font-weight: 700; 
+  font-weight: 700;
   color: #000;
 }
 
 /* หัวข้อฉุกเฉิน */
 .emc-contact {
-  margin: 2rem;
+  background-color: #C7D1F6;
+  height: 50px;
+  width: 30%;
+  opacity: 0.85;
+  margin: 2rem auto;     /* ✅ auto = จัดให้อยู่กึ่งกลางแนวนอน */
   font-size: 30px;
-  font-weight: 700; 
-  text-align: left;
-}
-
-/* รายชื่อองค์กร */
-.organizations {
-  display: flex;
-  flex-direction: column; /* เรียงแนวตั้ง */
-  align-items: center;    /* จัดแนวนอนกลาง */
-  gap: 1rem;              
-}
-
-/* Card องค์กร */
-.ag-Container {
-  background-color: white;
-  width: 1200px;
-  height: 70px;
-  opacity: 0.85; 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.text-ag {
-  font-size: 30px;
-  font-weight: 700; 
+  font-weight: 700;
   color: #000;
-  text-align: center;
+  text-align: center;    /* ✅ ข้อความอยู่กลางแนวนอน */
+  display: flex;
+  align-items: center;   /* ✅ กลางแนวตั้ง */
+  justify-content: center; /* ✅ กลางแนวนอนภายใน flex */
+  border-radius: 10px;
+}
+
+
+/* ปุ่ม DropDown */
+.dropdown-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-right: 15px;
+  transition: transform 0.3s;
+}
+
+.dropdown-btn:hover {
+  transform: scale(1.2);
+}
+
+/* Card หลักแต่ละหน่วยงาน */
+.ag-Container {
+  background-color: #ffffff;
+  width: 100%;
+  max-width: 1100px;
+  border-radius: 12px;
+  opacity: 0.95;
+  display: flex;
+  align-items:center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px 20px;
+  margin: 1rem auto;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+
+/* เพิ่มเอฟเฟกต์เมื่อ hover */
+.ag-Container:hover {
+  transform: translateY(-3px);
+}
+.agency-name {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111;
+}
+
+/* โลโก้หน่วยงาน */
+.agency-link {
+  text-decoration: none;
+  color: #000;
+  font-size: 22px;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  flex: 1;
+  color: inherit; 
+}
+
+.ag-logo {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+/* เปลี่ยนสีเมื่อ hover */
+.agency-link:hover {
+  color: #1a4adf;
+}
+.agency-info {
+  flex: 1;            /* ให้ชื่อ + summary ขยายเต็มพื้นที่ */
+  display: flex;
+  flex-direction: column; /* ชื่ออยู่บน summary */
+  gap: 0.5rem;
+}
+
+.phone-btn {
+  display: inline-flex;          /* จัดไอคอนกับข้อความในบรรทัดเดียว */
+  align-items: center;           /* จัดแนวตั้งกลาง */
+  gap: 0.5rem;                   /* เว้นระยะระหว่างไอคอนกับข้อความ */
+  
+  padding: 0.5rem 1rem;          /* ระยะขอบด้านใน */
+  background-color: #cb0101;     /* สีปุ่ม (เขียวตัวอย่าง) */
+  color: white;                  /* สีข้อความ */
+  font-size: 16px;               
+  font-weight: 600;
+  flex-shrink: 0;       /* ป้องกันปุ่มย่อเล็ก */
+  border: none;                  /* ลบเส้นขอบ */
+  border-radius: 10px;            /* มุมโค้งมน */
+  text-decoration: none;         /* ลบ underline ของ <a> */
+  cursor: pointer;               /* เปลี่ยนเคอร์เซอร์เมื่อ hover */
+  transition: background-color 0.2s;
+}
+
+.phone-btn:hover {
+  background-color: #45a049;     /* เปลี่ยนสีเมื่อ hover */
+}
+
+
+
+/* ส่วน dropdown ที่ขยายออก */
+.dropdown-btn {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  margin-right: 15px;
+  transition: transform 0.3s;
+}
+
+.dropdown-btn:hover {
+  transform: scale(1.2);
+}
+
+.dropdown-content {
+  background: #f8f9fa;
+  border-top: 1px solid #ddd;
+  border-radius: 0 0 12px 12px;
+  padding: 1rem;
+  font-size: 18px;
+  color: #333;
+  text-align: left;
+  line-height: 1.6;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;  /* รวม padding ไว้ใน width */
+  word-wrap: break-word;   /* ตัดคำยาวให้อัตโนมัติ */
+  animation: fadeIn 0.3s ease;
+}
+
+
+
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
