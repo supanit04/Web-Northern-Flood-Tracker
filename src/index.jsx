@@ -2,12 +2,15 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter as Router, useNavigate } from 'react-router-dom'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './assets/css/index.css'
+// Styles
+import 'bootstrap/dist/css/bootstrap.min.css' // Bootstrap
+import './assets/css/index.css'               // Tailwind
+// Components
 import App from './App.jsx'
 
+// Header Component
 function Header() {
-  const navigate = useNavigate(); // ✅ ใช้งานได้แล้ว
+  const navigate = useNavigate()
 
   return (
     <header className="agency-header">
@@ -18,6 +21,7 @@ function Header() {
           <div className="en">Northern Flood Forecasting System</div>
         </div>
       </div>
+
       <nav>
         <button className="btn text-light" onClick={() => navigate('/')}>
           Home
@@ -30,6 +34,7 @@ function Header() {
   )
 }
 
+// Layout Component
 function Layout() {
   return (
     <div className="bg-container">
@@ -39,6 +44,7 @@ function Layout() {
   )
 }
 
+// Render Application
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Router>
