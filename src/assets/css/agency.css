@@ -113,7 +113,7 @@
   gap: 0.5rem;                   /* เว้นระยะระหว่างไอคอนกับข้อความ */
   
   padding: 0.5rem 1rem;          /* ระยะขอบด้านใน */
-  background-color: #cb0101;     /* สีปุ่ม (เขียวตัวอย่าง) */
+  background: linear-gradient(135deg, #cb0101, #ff4d4d);
   color: white;                  /* สีข้อความ */
   font-size: 16px;               
   font-weight: 600;
@@ -126,7 +126,7 @@
 }
 
 .phone-btn:hover {
-  background-color: #45a049;     /* เปลี่ยนสีเมื่อ hover */
+  background: linear-gradient(135deg, #a30000, #ff3333);
 }
 
 
