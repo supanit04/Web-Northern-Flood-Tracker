@@ -37,9 +37,200 @@
       stroke-linejoin: round;
       fill: none;
     } */
+/* Flood background */
+body {
+  font-family: 'Noto Sans Thai', sans-serif;
+  margin: 0;
+  background-color: #f0f4f8;
+}
+
+.bg-brown {
+  background-color: #5f3c21;
+}
+.bg-blue-40{
+  background-color: #112d9b;
+}
+.bg-sky {
+  background-color: #0284c7;
+}
+.bg-red {
+  background-color: #dc2626;
+}
+.bg-amber {
+  background-color: #d97706;
+}
+.bg-orange {
+  background-color: #ea580c;
+}
+.bg-purple {
+  background-color: #7e22ce;
+}
+.bg-green {
+  background-color: #16a34a;
+}
+.bg-blue {
+  background-color: #1e40af;
+}
+
+/* Scrollbar for table */
+table {
+  border-collapse: collapse;
+}
+
+::-webkit-scrollbar {
+  height: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background: #bbb;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/* .mx-auto mt-6 bg-white/80 w-11/12 rounded-xl shadow-lg p-4 text-center{
+  color: #000000;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 2px 5px rgb(0 0 0 / 0.12);
+} */
+.predictbox {
+  width: 91.666667%;     /* เท่ากับ w-11/12 */
+  margin-left: auto;     /* mx-auto */
+  margin-right: auto;
+  margin-top: 1.5rem;    /* mt-6 */
+  background-color: white;
+  color: black;
+  border-radius: 1.5rem; /* rounded-3xl */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-xl */
+  padding: 1.5rem;       /* p-6 */
+  text-align: center;
+}
+.redbox{
+  background-color: #e43e3e; /* bg-red-500 */
+  color: black;              /* text-white */
+  padding: 0.5rem 1.5rem;    /* py-2 px-6 */
+  border-radius: 0.75rem;    /* rounded-xl */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 
+              0 1px 2px rgba(0, 0, 0, 0.06); /* shadow */
+  border: none;              /* เอาเส้นขอบออก */
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.yellowbox{
+  background-color: #efe19d; /* bg-red-500 */
+  color: black;              /* text-white */
+  padding: 0.5rem 1.5rem;    /* py-2 px-6 */
+  border-radius: 0.75rem;    /* rounded-xl */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 
+              0 1px 2px rgba(0, 0, 0, 0.06); /* shadow */
+  border: none;              /* เอาเส้นขอบออก */
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.redbox:hover {
+  transform: translateY(-2px); /* ลอยเล็กน้อย */
+}
+
+.yellowbox:hover {
+  background-color: #ebd22c; /* เข้มขึ้นเวลาชี้เมาส์ */
+  transform: translateY(-2px); /* ลอยเล็กน้อย */
+}
+.greenbox{
+  background-color: #72dc98;
+  color: black;              /* text-white */
+  padding: 0.5rem 1.5rem;    /* py-2 px-6 */
+  border-radius: 0.75rem;    /* rounded-xl */         
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 
+              0 1px 2px rgba(0, 0, 0, 0.06); /* shadow */
+  border: none;              /* เอาเส้นขอบออก */
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.greenbox:hover {
+  background-color: #20bc4a; /* เข้มขึ้นเวลาชี้เมาส์ */
+  transform: translateY(-2px); /* ลอยเล็กน้อย */
+}
+.mapbox{
+  margin: 30px;
+  flex: 1;                      /* flex-1 */
+  min-width: 300px;             /* min-w-[300px] */
+  background-color: rgba(255, 255, 255, 0.9); /* bg-white/90 */
+  border-radius: 20px;       /* rounded-xl */
+  padding: 30px;                /* p-4 */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1),
+              0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+              color: black;
+}
+.floodtable{
+  color: black;
+  margin: 30px 30px 30px 10px;
+  flex: 1; /* flex-1: ให้ element ขยายเต็มพื้นที่ที่เหลือ */
+  min-width: 300px; /* min-w-[300px]: ความกว้างขั้นต่ำ 300px */
+  background-color: rgba(255, 255, 255, 0.9); /* bg-white/90: ขาวทึบ 90% */
+  border-radius: 20px; /* rounded-xl: ขอบโค้งมนขนาดใหญ่ */
+  padding: 30px; /* p-4: padding รอบๆ 1rem */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1),
+              0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-lg */
+  box-sizing: border-box; /* เพื่อให้ padding ไม่เพิ่มขนาดเกิน */
+}
+.status {
+  border: 1px solid #000;
+  padding: 0.5rem;
+  font-weight: 600;
+}
+
+.status.flood {
+  color: #b91c1c;       /* สีแดง */
+  background-color: #fee2e2; /* พื้นหลังอ่อนแดง */
+}
+
+.status.warning {
+  color: #b45309;       /* สีเหลือง */
+  background-color: #fef3c7; /* พื้นหลังอ่อนเหลือง */
+}
+.staticbox {
+  width: 91.666667%;     /* เท่ากับ w-11/12 */
+  margin-left: auto;     /* mx-auto */
+  margin-right: auto;
+  margin-top: 1.5rem;    /* mt-6 */
+  background-color: white;
+  color: black;
+  border-radius: 1.5rem; /* rounded-3xl */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-xl */
+  padding: 1.5rem;       /* p-6 */
+  text-align: center;
+}
+.staticmonthsbox {
+  width: 91.666667%;     /* เท่ากับ w-11/12 */
+  margin-left: auto;     /* mx-auto */
+  margin-right: auto;
+  margin-top: 1.5rem;    /* mt-6 */
+  background-color: white;
+  color: black;
+  border-radius: 1.5rem; /* rounded-3xl */
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-xl */
+  padding: 1.5rem;       /* p-6 */
+  text-align: center;
+}
 
 
+.card-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
 
-
-    
-
+.card {
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 220px;
+  padding: 1.25rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
