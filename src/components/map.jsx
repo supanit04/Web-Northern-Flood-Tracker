@@ -2,7 +2,7 @@ import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import { useEffect, useRef, useState, useMemo } from "react";
-import "../assets/css/leaflet.css"; // Import ไฟล์ CSS ที่สร้างขึ้น
+import "../assets/css/leaflet.css"; 
 
 // Component ช่วย Zoom
 function MapUpdater({ center, zoom, bounds }) {
@@ -51,6 +51,7 @@ export default function RiverMap({
       setDistricts(d.features.filter(x => NORTH_CODES.includes(x.properties.pro_code)));
       setSubdistricts(s.features.filter(x => NORTH_CODES.includes(x.properties.pro_code)));
       setAllFloodData(fResponse.data || []);
+      console.log("✅ Data Loaded. Total rows:", fResponse.data ? fResponse.data.length : 0);
     }).catch(err => console.error("Error loading map data:", err));
   }, []);
 
@@ -82,54 +83,113 @@ export default function RiverMap({
     }
   }, [selectedProvince, selectedDistrict, provinces, districts]);
 
-  // 3. Filter Data
+  // 3. Filter Data by Date (Fixed Year 2024)
   const currentFloodData = useMemo(() => {
     if (!selectedDate || allFloodData.length === 0) return [];
+    
     const d = new Date(selectedDate);
-    d.setDate(d.getDate() - (selectedDayIndex + 1));
+    d.setDate(d.getDate() - (selectedDayIndex + 1)); 
+    
+    // 🔥 FORCE YEAR 2024
+    const year = "2024"; 
     const month = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
-    const targetDateStr = `2024-${month}-${day}`;
-    return allFloodData.filter(item => item.date === targetDateStr);
+    const targetDateStr = `${year}-${month}-${day}`; 
+    
+    const filtered = allFloodData.filter(item => item.date === targetDateStr);
+    return filtered;
   }, [allFloodData, selectedDate, selectedDayIndex]);
 
-  // 4. Color Logic
-  const getSubdistrictColor = (code) => {
-    const data = currentFloodData.find((d) => d.subdistrict_code === code || d.subdistrict === code);
+  // 4. Color Logic (Updated Aggregation Logic) 🔧
+  const cleanStr = (str) => String(str || "").trim().replace(/\s+/g, '');
+
+  const getSubdistrictColor = (properties) => {
+    const mapCode = cleanStr(properties.tam_code);
+    const mapName = cleanStr(properties.tam_th);
+
+    const data = currentFloodData.find((d) => {
+        const apiCode = cleanStr(d.subdistrict_code || d.tam_code);
+        if (apiCode && apiCode === mapCode) return true;
+        const apiName = cleanStr(d.subdistrict);
+        if (apiName === mapName) return true;
+        return false;
+    });
+
     if (!data) return "#4caf50";
-    const p1 = data["Flood_T+1_Pred"];
-    const p2 = data["Flood_T+2_Pred"];
-    const p3 = data["Flood_T+3_Pred"];
-    let status;
-    if (selectedDayIndex === 0) status = p1;
-    else if (selectedDayIndex === 1) status = p2;
-    else status = p3;
-    if (status === 2) return "#d32f2f";
-    if (status === 1) return "#fdd835";
+
+    const p1 = Number(data["Flood_T+1_Pred"]);
+    const p2 = Number(data["Flood_T+2_Pred"]);
+    const p3 = Number(data["Flood_T+3_Pred"]);
+    
+    if (selectedDayIndex === 0) { 
+        if (p1 === 1) return "#d32f2f"; 
+        if (p2 === 1 || p3 === 1) return "#fdd835"; 
+    } 
+    else if (selectedDayIndex === 1) { 
+        if (p2 === 1) return "#d32f2f"; 
+        if (p3 === 1) return "#fdd835"; 
+    } 
+    else if (selectedDayIndex === 2) { 
+        if (p3 === 1) return "#d32f2f"; 
+    }
     return "#4caf50";
   };
 
-  const getAggregateColor = (code, type) => {
-    if (highlightNorth && type === "province") return "#4caf50";
-    let children = currentFloodData.filter(d =>
-      type === "province"
-        ? d.province_code === code || d.province === code
-        : d.district_code === code || d.district === code
-    );
+  // 🔴 ฟังก์ชันนี้ได้รับการปรับปรุงใหม่!
+  const getAggregateColor = (properties, type) => {
+    // ดึง Code และ Name จาก GeoJSON
+    let mapCode, mapName;
+    if (type === "province") {
+        mapCode = cleanStr(properties.pro_code);
+        mapName = cleanStr(properties.pro_th);
+    } else {
+        mapCode = cleanStr(properties.amp_code);
+        mapName = cleanStr(properties.amp_th);
+    }
+
+    // กรองหาลูกๆ (ตำบล) ในพื้นที่นั้นๆ
+    let children = currentFloodData.filter(d => {
+      // เทียบจาก API
+      let apiCode, apiName;
+      if (type === "province") {
+        apiCode = cleanStr(d.province_code);
+        apiName = cleanStr(d.province);
+      } else {
+        apiCode = cleanStr(d.district_code);
+        apiName = cleanStr(d.district);
+      }
+      
+      // Match Code หรือ Match Name
+      return (apiCode && apiCode === mapCode) || (apiName === mapName);
+    });
+
+    // 🔍 Debug: เช็คว่าเจอลูกๆ ไหม
+    // if (children.length > 0) {
+    //    console.log(`🔎 Group ${mapName}: Found ${children.length} subdistricts.`);
+    // } else if (type === "district" && selectedProvince) {
+    //    console.warn(`⚠️ Group ${mapName} (${type}) not found matches!`);
+    // }
+
     if (children.length === 0) return "#4caf50";
+
+    // นับจำนวนตำบลที่ได้รับผลกระทบ
     let affectedCount = children.filter(d => {
-        const p1 = d["Flood_T+1_Pred"];
-        const p2 = d["Flood_T+2_Pred"];
-        const p3 = d["Flood_T+3_Pred"];
-        let status;
-        if (selectedDayIndex === 0) status = p1;
-        else if (selectedDayIndex === 1) status = p2;
-        else status = p3;
-        return status > 0;
+        const p1 = Number(d["Flood_T+1_Pred"]);
+        const p2 = Number(d["Flood_T+2_Pred"]);
+        const p3 = Number(d["Flood_T+3_Pred"]);
+        
+        // Logic การนับต้องตรงกับ Subdistrict
+        if (selectedDayIndex === 0) return p1 === 1 || p2 === 1 || p3 === 1; // นับถ้ามีแนวโน้มด้วย (เพื่อให้เหลืองขึ้น)
+        if (selectedDayIndex === 1) return p2 === 1 || p3 === 1;
+        if (selectedDayIndex === 2) return p3 === 1;
+        return false;
     }).length;
+
     let percent = (affectedCount / children.length) * 100;
+
+    // Logic รวม: แดงถ้า > 40%, เหลืองถ้ามีอย่างน้อย 1 ตำบล
     if (percent > 40) return "#d32f2f";
-    if (percent > 20) return "#fdd835";
+    if (affectedCount >= 1) return "#fdd835";
     return "#4caf50";
   };
 
@@ -147,12 +207,13 @@ export default function RiverMap({
     const p = feature.properties;
     let color = "#ccc";
     if(level === "province") {
-      if(highlightNorth && NORTH_CODES.includes(p.pro_code)) color = "#4caf50";
-      else color = getAggregateColor(p.pro_code, "province");
+      // ส่ง properties ทั้งก้อนไปเลย เพื่อให้ match ชื่อได้
+      color = getAggregateColor(p, "province");
     } else if(level === "district") {
-      color = getAggregateColor(p.amp_code, "district");
+      // ส่ง properties ทั้งก้อนไปเลย
+      color = getAggregateColor(p, "district");
     } else if(level === "subdistrict") {
-      color = getSubdistrictColor(p.tam_code);
+      color = getSubdistrictColor(p);
     }
     return { weight: 1, color: "white", fillOpacity: 0.7, fillColor: color };
   };
@@ -169,16 +230,13 @@ export default function RiverMap({
   return (
     <div className="river-map-container">
       
-      {/* ส่วนหัว: Title และ Filters */}
+      {/* ส่วนหัว */}
       <div className="map-card-header">
         <h2 className="font-bold mb-4 text-center text-xl text-gray-800">
-              {selectedProvince ? `แผนที่จังหวัด${selectedProvince}` : "แผนที่ภาคเหนือ"}
-            </h2>
+          {selectedProvince ? `แผนที่จังหวัด${selectedProvince}` : "แผนที่ภาคเหนือ"}
+        </h2>
         
-        {/* ใช้ class .sidebar.horizontal และ .sidebar-group ตาม CSS */}
         <div className="sidebar horizontal">
-          
-          {/* Dropdown จังหวัด */}
           <div className="sidebar-group">
              <label>จังหวัด</label>
              <select 
@@ -195,7 +253,6 @@ export default function RiverMap({
              </select>
           </div>
 
-          {/* Dropdown อำเภอ */}
           <div className="sidebar-group">
              <label>อำเภอ</label>
              <select 
@@ -210,9 +267,8 @@ export default function RiverMap({
              </select>
           </div>
 
-          {/* ปุ่มรีเซ็ต */}
           <div className="sidebar-group">
-             <label>&nbsp;</label> {/* เว้นวรรคเพื่อให้ปุ่มตรงกับ Input */}
+             <label>&nbsp;</label>
              <button onClick={resetMap}>
                  <span>🔄</span> ภาพรวม
              </button>
@@ -226,7 +282,7 @@ export default function RiverMap({
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <MapUpdater center={mapView.center} zoom={mapView.zoom} bounds={mapView.bounds} />
           <GeoJSON
-            key={level + (selectedProvince||"") + (selectedDistrict||"") + selectedDayIndex + currentFloodData.length}
+            key={level + (selectedProvince||"") + (selectedDistrict||"") + selectedDayIndex + JSON.stringify(currentFloodData)}
             data={displayData}
             style={styleFeature}
             onEachFeature={(feature, layer) => {
@@ -237,7 +293,7 @@ export default function RiverMap({
         </MapContainer>
       </div>
       
-      {/* ส่วน Legend ด้านล่าง */}
+      {/* Legend */}
       <div className="map-legend-container">
         <div className="legend-item">
           <div className="legend-color-box" style={{ backgroundColor: "#d32f2f" }}></div>
@@ -245,7 +301,7 @@ export default function RiverMap({
         </div>
         <div className="legend-item">
           <div className="legend-color-box" style={{ backgroundColor: "#fdd835" }}></div>
-          <span>เสี่ยงเกิดน้ำท่วม (&gt;20%)</span>
+          <span>เสี่ยงเกิดน้ำท่วม (มีพื้นที่ท่วม)</span>
         </div>
         <div className="legend-item">
           <div className="legend-color-box" style={{ backgroundColor: "#4caf50" }}></div>
