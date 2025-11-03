@@ -100,13 +100,18 @@ table {
   margin-left: auto;     /* mx-auto */
   margin-right: auto;
   margin-top: 1.5rem;    /* mt-6 */
-  background-color: white;
+   background-color: rgba(255, 255, 255, 0.85);
   color: black;
   border-radius: 1.5rem; /* rounded-3xl */
   box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1); /* shadow-xl */
   padding: 1.5rem;       /* p-6 */
   text-align: center;
+  
 }
+.predictbox h2 {
+  font-weight: 800;
+}
+
 .redbox{
   background-color: #e43e3e; /* bg-red-500 */
   color: black;              /* text-white */
