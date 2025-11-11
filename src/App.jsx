@@ -3,6 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
 import Agency from "./agency";
 import StationCards from "./components/river-stations.jsx";
+import Prediction from "./components/Prediction.jsx"; // ปรับ path ให้ตรงกับที่เก็บไฟล์
 
 const provinces = [
   { name: "เชียงราย", districts: ["เมืองเชียงราย", "เวียงชัย", "แม่ลาว", "แม่จัน","ดอยหลวง","พาน","พญาเม็งราย","เวียงเชียงรุ้ง","ป่าแดด","แม่สรวย","เชียงแสน","ขุนตาล","แม่สาย","เทิง","แม่ฟ้าหลวง","เวียงป่าเป้า","เวียงแก่น","เชียงของ"], color: "bg-blue-40" },
@@ -16,23 +17,8 @@ const provinces = [
   { name: "อุตรดิตถ์", districts: ["เมือง", "ลับแล", "ตรอน", "ท่าปลา","ทองแสนชัย","พิชัย","น้ำปาด","ฟากท่า","บ้านโคก"],color: "bg-blue" },
 ];
 
+// Flood Data (ตัวอย่าง)
 
-// ต้องดึงข้อมูลที่predictมาใช้จริง
-const floodData = [
-  { province: "เชียงใหม่", district: "จอมทอง", subdistrict: "แม่สอย", status: "เกิดน้ำท่วม" },
-  { province: "เชียงใหม่", district: "แม่ริม", subdistrict: "แม่สอย", status: "เกิดน้ำท่วม" },
-  { province: "เชียงใหม่", district: "สันทราย", subdistrict: "แม่สอย", status: "เกิดน้ำท่วม" },
-  { province: "ลำปาง", district: "เกาะคา", subdistrict: "บ้านเสด็จ", status: "เฝ้าระวัง" },
-  { province: "ลำปาง", district: "ห้างฉัตร", subdistrict: "บ้านเสด็จ", status: "เฝ้าระวัง" },
-  { province: "ลำปาง", district: "แม่ทะ", subdistrict: "บ้านเสด็จ", status: "เฝ้าระวัง" },
-  { province: "เชียงใหม่", district: "แม่วาง", subdistrict: "แม่วิน", status: "เกิดน้ำท่วม" },
-  { province: "ลำพูน", district: "เมือง", subdistrict: "หนองหนาม", status: "เกิดน้ำท่วม" },
-  { province: "ลำพูน", district: "แม่ทา", subdistrict: "หนองหนาม", status: "เกิดน้ำท่วม" },
-  { province: "ลำพูน", district: "ลี้", subdistrict: "หนองหนาม", status: "เกิดน้ำท่วม" },
-  { province: "เชียงราย", district: "เวียงชัย", subdistrict: "แม่สลอง", status: "เฝ้าระวัง" },
-  { province: "เชียงราย", district: "เมือง", subdistrict: "แม่สลอง", status: "เฝ้าระวัง" },
-  { province: "เชียงราย", district: "แม่จัน", subdistrict: "แม่สลอง", status: "เฝ้าระวัง" },
-];
 
 function Home() {
   const [selectedProvince, setSelectedProvince] = useState(null);
@@ -40,15 +26,16 @@ function Home() {
 
   const handleProvinceSelect = (provinceName) => {
     setSelectedProvince(provinceName);
-    setSelectedDistrict(null); // รีเซ็ตอำเภอเมื่อเปลี่ยนจังหวัด
+    setSelectedDistrict(null);
   };
+
   const selectedProvinceData = provinces.find(
     (p) => p.name === selectedProvince
   );
 
   return (
     <main>
-      {/* Forecast */}
+      {/* Forecast box */}
       <section className="predictbox">
         <h2>คาดการณ์อุทกภัย 72 ชั่วโมงล่วงหน้า</h2>
         <div className="flex justify-center gap-4">
@@ -70,104 +57,71 @@ function Home() {
         {/* Map */}
         <div className="mapbox w-[300px] h-[600px] bg-gray-50 p-4 rounded-lg shadow-md overflow-auto">
           <h2 className="font-semibold mb-3 text-center text-lg">แผนที่ภาคเหนือ</h2>
-           <h2 className="font-semibold mb-3 text-center text-lg">
-    {!selectedProvince ? "เลือกจังหวัด" : `เลือกอำเภอในจังหวัด ${selectedProvince}`}
-  </h2>
+          <h2 className="font-semibold mb-3 text-center text-lg">
+            {!selectedProvince ? "เลือกจังหวัด" : `เลือกอำเภอในจังหวัด ${selectedProvince}`}
+          </h2>
           {!selectedProvince ? (
-    // ✅ หน้ารายชื่อจังหวัด
-    <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-4 ">
-      {provinces.map((p) => (
-        <div
-          key={p.name}
-          className={`${p.color} p-3 text-white text-center rounded-full cursor-pointer hover:scale-105 transition`}
-          onClick={() => handleProvinceSelect(p.name)}
-        >
-          <span className="text-base font-semibold">{p.name}</span>
+            <div className="grid grid-cols-3 gap-4">
+              {provinces.map((p) => (
+                <div
+                  key={p.name}
+                  className={`${p.color} p-3 text-white text-center rounded-full cursor-pointer hover:scale-105 transition`}
+                  onClick={() => handleProvinceSelect(p.name)}
+                >
+                  {p.name}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-gray-100 p-4 rounded-lg">
+              <button
+                onClick={() => setSelectedProvince(null)}
+                className="mb-3 px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 transition"
+              >
+                ← กลับไปเลือกจังหวัด
+              </button>
+              <div className="grid grid-cols-2 gap-3">
+                {selectedProvinceData?.districts.map((d) => (
+                  <div
+                    key={d}
+                    className={`district-box p-2 text-center rounded-md cursor-pointer transition ${
+                      selectedDistrict === d
+                        ? "bg-blue-600 text-white"
+                        : "bg-white hover:bg-blue-100"
+                    }`}
+                    onClick={() => setSelectedDistrict(d)}
+                  >
+                    {d}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
-      ))}
-    </div>
-          ) : (<div className="bg-gray-100 p-4 rounded-lg">
-      <button
-        onClick={() => setSelectedProvince(null)}
-        className="mb-3 px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 transition"
-      >
-        ← กลับไปเลือกจังหวัด
-      </button>
-      <div className="grid grid-cols-2 gap-3">
-        {selectedProvinceData?.districts.map((d) => (
-          <div
-            key={d}
-            className={`district-box p-2 text-center rounded-md cursor-pointer transition ${
-              selectedDistrict === d
-                ? "bg-blue-600 text-white"
-                : "bg-white hover:bg-blue-100"
-            }`}
-            onClick={() => setSelectedDistrict(d)}
-          >
-            {d}
-          </div>
-        ))}
-          </div>
-    </div>
-      )}
-          </div>
-        
 
-        
         {/* Flood Table */}
-        <div className="floodtable">
-          <div className="overflow-auto p-4 bg-gray-50 rounded-lg h-[500px]">
-            <h2 className="font-semibold mb-3 text-center text-lg">สถานการณ์น้ำท่วม</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full border border-black text-sm text-center">
-              <thead>
-                <tr>
-                  <th>จังหวัด</th>
-                  <th>อำเภอ</th>
-                  <th>ตำบล</th>
-                  <th>สถานะ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {floodData
-                  .filter((d) => {
-                  if (selectedProvince && !selectedDistrict)
-                    return d.province === selectedProvince;
-                  if (selectedProvince && selectedDistrict)
-                    return (
-                      d.province === selectedProvince &&
-                      d.district === selectedDistrict
-                    );
-                  return true;
-                })
-                .map((d, idx) => (
-                  <tr key={idx}>
-                    <td className="border p-2">{d.province}</td>
-                    <td className="border p-2">{d.district}</td>
-                    <td className="border p-2">{d.subdistrict}</td>
-                    <td
-                      className={`border p-2 font-semibold ${
-                        d.status === "เกิดน้ำท่วม"
-                          ? "text-red-700 bg-red-100"
-                          : "text-yellow-700 bg-yellow-100"
-                      }`}
-                    >
-                      {d.status}
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-          </div>
+        <div className="floodtable w-[600px] h-[600px] overflow-auto p-4 bg-gray-50 rounded-lg">
+          <h2 className="font-semibold mb-3 text-center text-lg">สถานการณ์น้ำท่วม</h2>
+           {/* Prediction Table */}
+      <section className="mt-6 px-6">
+       <Prediction 
+  provinceFilter={selectedProvince} 
+  districtFilter={selectedDistrict} 
+/>
+
+      </section>
         </div>
       </section>
 
-      {/* River Stations Cards */}
+      {/* River Stations */}
       <section className="flex flex-wrap mt-6 gap-4 px-6">
         <div style={{ padding: "32px", width: "100%" }}>
           <h1 className="text-2xl font-bold mb-4 text-center">River Stations (Northern Thailand)</h1>
-          <StationCards provinceFilter={selectedProvince} />
+          <StationCards
+            provinceFilter={selectedProvince}
+            districtFilter={selectedDistrict}
+            scrollToSelf={!!selectedDistrict}
+          />
         </div>
       </section>
     </main>
