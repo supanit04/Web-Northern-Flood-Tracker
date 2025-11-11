@@ -1,38 +1,170 @@
-.dam-cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  justify-content: center;
-  padding: 16px 0;
+/* --- 1. Container หลัก --- */
+.river-stations-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f7f9fc; /* Light Gray Background */
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
-.dam-cards .card {
-  background-color: #ffffff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  width: 240px;
-  padding: 1.25rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+/* --- 2. Header และ Controls --- */
+.headers-wrapper {
+    display: flex;
+    align-items: flex-start;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #e0e0e0;
+    margin-bottom: 20px;
 }
 
-.dam-cards .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+.logo-placeholder {
+    width: 60px;
+    height: 60px;
+    background-color: #e0f2f1; /* Light Cyan */
+    border-radius: 8px;
+    margin-right: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #00796b; /* Dark Teal */
 }
 
-.bg-red-100 { background-color: #fee2e2; }
-.bg-yellow-100 { background-color: #fef3c7; }
-.bg-green-100 { background-color: #d1fae5; }
-
-.card h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #111827;
-  margin-bottom: 0.5rem;
+.title-and-controls {
+    flex-grow: 1;
+    display: grid;
+    /* จัด layout ให้ Title อยู่กลาง, Year อยู่ซ้าย, Dropdown อยู่ใต้ Title */
+    grid-template-areas: 
+        "year title ."
+        "year dropdown station_label";
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: center;
 }
 
-.card p {
-  font-size: 0.9rem;
-  margin: 0.25rem 0;
-  color: #374151;
+.title {
+    grid-area: title;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #333;
+    margin-top: -15px; /* ดึง title ขึ้นเล็กน้อย */
+}
+
+/* --- 3. Year Selector --- */
+.year-selector {
+    grid-area: year;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: -5px; 
+}
+
+.year-selector span {
+    cursor: pointer;
+    padding: 3px 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+
+.year-selector span:first-child {
+    font-weight: 700;
+    color: #007bff; /* Active Year */
+    background-color: #e6f0ff;
+}
+
+/* --- 4. Dropdown และ Label --- */
+.station-select-group {
+    grid-area: dropdown;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.station-pin {
+    font-size: 1.2rem;
+    margin-right: 5px;
+}
+
+.station-dropdown {
+    padding: 8px 15px;
+    border: 2px solid #007bff;
+    border-radius: 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #007bff;
+    background-color: white;
+    appearance: none; /* ลบลูกศรเริ่มต้นของเบราว์เซอร์ */
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+}
+
+.station-name-label {
+    grid-area: station_label;
+    text-align: right;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #555;
+    /* จัดตำแหน่งให้อยู่ตรงกลางของพื้นที่ */
+    align-self: center; 
+    margin-top: 5px;
+}
+
+/* --- 5. กราฟและสถานะ Loading --- */
+.loading {
+    text-align: center;
+    padding: 50px 20px;
+    font-size: 1.2rem;
+    color: #888;
+}
+
+/* --- 6. Responsive (สำหรับมือถือ) --- */
+@media (max-width: 768px) {
+    .headers-wrapper {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .logo-placeholder {
+        margin-right: 0;
+        margin-bottom: 15px;
+    }
+
+    .title-and-controls {
+        grid-template-areas: 
+            "title"
+            "year"
+            "dropdown"
+            "station_label";
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+
+    .year-selector {
+        align-items: center;
+        flex-direction: row;
+        gap: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+    }
+
+    .title {
+        font-size: 1.5rem;
+        margin-top: 0;
+    }
+    
+    .station-name-label {
+        text-align: center;
+        margin-top: 15px;
+    }
+}
+
+/* --- 7. Recharts Custom (Optional) --- */
+/* ปรับสไตล์ของ Legend ให้ดูดีขึ้น */
+.recharts-legend-wrapper {
+    font-size: 0.9rem;
+    font-weight: 500;
 }

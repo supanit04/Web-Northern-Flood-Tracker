@@ -1,0 +1,187 @@
+/* ===========================
+   🎨 PREDICTION PAGE STYLING
+   =========================== */
+
+/* พื้นที่หลัก */
+.prediction-panel {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-family: "Sarabun", sans-serif;
+  color: #333;
+}
+
+/* ===========================
+   🔍 ส่วนตัวกรอง (Dropdown)
+   =========================== */
+.filter-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.filter-dropdown {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: #f9f9f9;
+  font-size: 0.95rem;
+  min-width: 160px;
+  transition: 0.2s;
+}
+
+.filter-dropdown:hover {
+  border-color: #0078d4;
+  background-color: #fff;
+}
+
+/* ===========================
+   📊 ตารางแสดงข้อมูล
+   =========================== */
+.prediction-table-wrap {
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+.prediction-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.prediction-table th {
+  background-color: #e6f3ff;
+  color: #003366;
+  font-weight: bold;
+  padding: 10px;
+  border-bottom: 2px solid #aaccee;
+}
+
+.prediction-table td {
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.prediction-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* ===========================
+   🔴 สีสถานะ (status-badge)
+   =========================== */
+.status-badge {
+  display: inline-block;
+  padding: 5px 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: white;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+/* สถานะน้ำท่วม */
+.status-flood {
+  background-color: #e74c3c; /* แดง */
+}
+
+/* สถานะเฝ้าระวัง */
+.status-watch {
+  background-color: #f7b731; /* เหลือง */
+  color: #333; /* ตัวหนังสือเข้ม อ่านง่ายบนเหลือง */
+}
+
+/* สถานะปกติ */
+.status-ok {
+  background-color: #2ecc71; /* เขียว */
+}
+
+/* ===========================
+   📄 ส่วนท้ายตาราง (Footer)
+   =========================== */
+.prediction-footer {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-left-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+}
+
+.footer-right-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.label {
+  color: #555;
+}
+
+.items-per-page-dropdown {
+  padding: 4px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  font-size: 0.9rem;
+}
+
+.summary {
+  color: #333;
+  font-size: 0.9rem;
+}
+
+/* ปุ่มเปลี่ยนหน้า */
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pagination-controls button {
+  background-color: #0078d4;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.pagination-controls button:hover:not(:disabled) {
+  background-color: #005a9e;
+}
+
+.pagination-controls button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.page-number-input input {
+  width: 50px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 4px;
+  font-size: 0.9rem;
+}
+
+/* ===========================
+   📅 วันที่ข้อมูล
+   =========================== */
+.date-caption {
+  margin-top: 8px;
+  text-align: right;
+  font-size: 0.85rem;
+  color: #777;
+  font-style: italic;
+}
