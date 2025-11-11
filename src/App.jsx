@@ -5,26 +5,46 @@ import Agency from "./agency";
 import StationCards from "./components/river-stations.jsx";
 
 const provinces = [
-  { name: "เชียงราย", color: "bg-blue-40" },
-  { name: "พะเยา", color: "bg-sky" },
-  { name: "น่าน", color: "bg-red" },
-  { name: "แพร่", color: "bg-amber" },
-  { name: "ลำปาง", color: "bg-orange" },
-  { name: "ลำพูน", color: "bg-purple" },
-  { name: "เชียงใหม่", color: "bg-brown" },
-  { name: "แม่ฮ่องสอน", color: "bg-green" },
-  { name: "อุตรดิตถ์", color: "bg-blue" },
+  { name: "เชียงราย", districts: ["เมืองเชียงราย", "เวียงชัย", "แม่ลาว", "แม่จัน","ดอยหลวง","พาน","พญาเม็งราย","เวียงเชียงรุ้ง","ป่าแดด","แม่สรวย","เชียงแสน","ขุนตาล","แม่สาย","เทิง","แม่ฟ้าหลวง","เวียงป่าเป้า","เวียงแก่น","เชียงของ"], color: "bg-blue-40" },
+  { name: "พะเยา",districts: ["เมืองพะเยา", "จุน", "เชียงคำ", "เชียงม่วน","ดอกคำใต้","ปง","แม่ใจ","ภูซาง","ภูกามยาว"], color: "bg-sky" },
+  { name: "น่าน", districts: ["เมืองน่าน", "แม่จริม", "บ้านหลวง", "นาน้อย","ปัว","ท่าวังผา","เวียงสา","ทุ่งช้าง","เชียงกลาง","นาหมื่น","สันติสุข","บ่อเกลือ","สองแคว","ภูเพียง","เฉลิมพระเกียรติ"], color: "bg-red" },
+  { name: "แพร่", districts: ["เมือง", "สูงเม่น", "หนองม่วงไข่", "เด่นชัย","ร้องกวาง","ลอง","สอง","วังชิ้น"], color: "bg-amber" },
+  { name: "ลำปาง",districts: ["เมือง", "เกาะคา", "ห้างฉัตร", "แม่ทะ","เสริมงาม","แม่เมาะ","แจ้ห่ม","สบปราบ","เมืองปาน","งาว","เถิน","วังเหนือ","แม่พริก"], color: "bg-orange" },
+  { name: "ลำพูน", districts: ["เมือง", "ป่าซาง", "แม่ทา", "บ้านธิ","บ้านโฮ่ง","เวียงหนองล่อง","ลี้","ทุ่งหัวช้าง"],color: "bg-purple" },
+  { name: "เชียงใหม่",districts: ["เมือง", "แม่ริม", "สันทราย", "ดอยสะเก็ด","สารภี","สันกำแพง","หางดง","สันป่าตอง","แม่ออน","แม่วาง","แม่แตง","ดอยหล่อ","สะเมิง","จอมทอง","เชียงดาว","ฮอด","พร้าว","ดอยเต่า","ไชยปราการ","เวียงแหง","ฝาง","แม่แจ่ม","แม่อาย","อมก๋อย"], color: "bg-brown" },
+  { name: "แม่ฮ่องสอน",districts: ["เมือง", "ปางมะผ้า", "ขุมยวม", "ปาย","แม่ลาน้อย","แม่สะเรียง","สบเมย"], color: "bg-green" },
+  { name: "อุตรดิตถ์", districts: ["เมือง", "ลับแล", "ตรอน", "ท่าปลา","ทองแสนชัย","พิชัย","น้ำปาด","ฟากท่า","บ้านโคก"],color: "bg-blue" },
 ];
 
+
+// ต้องดึงข้อมูลที่predictมาใช้จริง
 const floodData = [
   { province: "เชียงใหม่", district: "จอมทอง", subdistrict: "แม่สอย", status: "เกิดน้ำท่วม" },
+  { province: "เชียงใหม่", district: "แม่ริม", subdistrict: "แม่สอย", status: "เกิดน้ำท่วม" },
+  { province: "เชียงใหม่", district: "สันทราย", subdistrict: "แม่สอย", status: "เกิดน้ำท่วม" },
+  { province: "ลำปาง", district: "เกาะคา", subdistrict: "บ้านเสด็จ", status: "เฝ้าระวัง" },
+  { province: "ลำปาง", district: "ห้างฉัตร", subdistrict: "บ้านเสด็จ", status: "เฝ้าระวัง" },
+  { province: "ลำปาง", district: "แม่ทะ", subdistrict: "บ้านเสด็จ", status: "เฝ้าระวัง" },
   { province: "เชียงใหม่", district: "แม่วาง", subdistrict: "แม่วิน", status: "เกิดน้ำท่วม" },
   { province: "ลำพูน", district: "เมือง", subdistrict: "หนองหนาม", status: "เกิดน้ำท่วม" },
-  { province: "เชียงราย", district: "เวียง", subdistrict: "แม่สลอง", status: "เฝ้าระวัง" },
+  { province: "ลำพูน", district: "แม่ทา", subdistrict: "หนองหนาม", status: "เกิดน้ำท่วม" },
+  { province: "ลำพูน", district: "ลี้", subdistrict: "หนองหนาม", status: "เกิดน้ำท่วม" },
+  { province: "เชียงราย", district: "เวียงชัย", subdistrict: "แม่สลอง", status: "เฝ้าระวัง" },
+  { province: "เชียงราย", district: "เมือง", subdistrict: "แม่สลอง", status: "เฝ้าระวัง" },
+  { province: "เชียงราย", district: "แม่จัน", subdistrict: "แม่สลอง", status: "เฝ้าระวัง" },
 ];
 
 function Home() {
-  const [selectedProvince, setSelectedProvince] = useState("");
+  const [selectedProvince, setSelectedProvince] = useState(null);
+  const [selectedDistrict, setSelectedDistrict] = useState(null);
+
+  const handleProvinceSelect = (provinceName) => {
+    setSelectedProvince(provinceName);
+    setSelectedDistrict(null); // รีเซ็ตอำเภอเมื่อเปลี่ยนจังหวัด
+  };
+  const selectedProvinceData = provinces.find(
+    (p) => p.name === selectedProvince
+  );
 
   return (
     <main>
@@ -46,26 +66,58 @@ function Home() {
       </section>
 
       {/* Main content */}
-      <section className="flex flex-wrap mt-6 gap-4 px-6">
+      <section className="flex flex-wrap justify-center mt-6 gap-4 px-6">
         {/* Map */}
-        <div className="mapbox">
+        <div className="mapbox w-[300px] h-[600px] bg-gray-50 p-4 rounded-lg shadow-md overflow-auto">
           <h2 className="font-semibold mb-3 text-center text-lg">แผนที่ภาคเหนือ</h2>
-          <div className="grid grid-cols-3 gap-2">
-            {provinces.map((p) => (
-              <div
-                key={p.name}
-                className={`${p.color} p-3 text-white text-center rounded-lg cursor-pointer hover:scale-105 transition`}
-                onClick={() => setSelectedProvince(p.name)}
-              >
-                {p.name}
-              </div>
-            ))}
-          </div>
+           <h2 className="font-semibold mb-3 text-center text-lg">
+    {!selectedProvince ? "เลือกจังหวัด" : `เลือกอำเภอในจังหวัด ${selectedProvince}`}
+  </h2>
+          {!selectedProvince ? (
+    // ✅ หน้ารายชื่อจังหวัด
+    <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-4 ">
+      {provinces.map((p) => (
+        <div
+          key={p.name}
+          className={`${p.color} p-3 text-white text-center rounded-full cursor-pointer hover:scale-105 transition`}
+          onClick={() => handleProvinceSelect(p.name)}
+        >
+          <span className="text-base font-semibold">{p.name}</span>
         </div>
+      ))}
+    </div>
+          ) : (<div className="bg-gray-100 p-4 rounded-lg">
+      <button
+        onClick={() => setSelectedProvince(null)}
+        className="mb-3 px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 transition"
+      >
+        ← กลับไปเลือกจังหวัด
+      </button>
+      <div className="grid grid-cols-2 gap-3">
+        {selectedProvinceData?.districts.map((d) => (
+          <div
+            key={d}
+            className={`district-box p-2 text-center rounded-md cursor-pointer transition ${
+              selectedDistrict === d
+                ? "bg-blue-600 text-white"
+                : "bg-white hover:bg-blue-100"
+            }`}
+            onClick={() => setSelectedDistrict(d)}
+          >
+            {d}
+          </div>
+        ))}
+          </div>
+    </div>
+      )}
+          </div>
+        
 
+        
         {/* Flood Table */}
         <div className="floodtable">
-          <h2 className="font-semibold mb-3 text-center text-lg">สถานการณ์น้ำท่วม</h2>
+          <div className="overflow-auto p-4 bg-gray-50 rounded-lg h-[500px]">
+            <h2 className="font-semibold mb-3 text-center text-lg">สถานการณ์น้ำท่วม</h2>
           <div className="overflow-x-auto">
             <table className="w-full border border-black text-sm text-center">
               <thead>
@@ -78,23 +130,35 @@ function Home() {
               </thead>
               <tbody>
                 {floodData
-                  .filter((d) => !selectedProvince || d.province === selectedProvince)
-                  .map((d, idx) => (
-                    <tr key={idx}>
-                      <td className="border p-2">{d.province}</td>
-                      <td className="border p-2">{d.district}</td>
-                      <td className="border p-2">{d.subdistrict}</td>
-                      <td className={`border p-2 font-semibold ${
+                  .filter((d) => {
+                  if (selectedProvince && !selectedDistrict)
+                    return d.province === selectedProvince;
+                  if (selectedProvince && selectedDistrict)
+                    return (
+                      d.province === selectedProvince &&
+                      d.district === selectedDistrict
+                    );
+                  return true;
+                })
+                .map((d, idx) => (
+                  <tr key={idx}>
+                    <td className="border p-2">{d.province}</td>
+                    <td className="border p-2">{d.district}</td>
+                    <td className="border p-2">{d.subdistrict}</td>
+                    <td
+                      className={`border p-2 font-semibold ${
                         d.status === "เกิดน้ำท่วม"
                           ? "text-red-700 bg-red-100"
                           : "text-yellow-700 bg-yellow-100"
-                      }`}>
-                        {d.status}
+                      }`}
+                    >
+                      {d.status}
                       </td>
                     </tr>
                   ))}
               </tbody>
             </table>
+          </div>
           </div>
         </div>
       </section>

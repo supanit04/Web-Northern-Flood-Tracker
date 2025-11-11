@@ -17,42 +17,55 @@ body {
 
 /* Forecast Boxes */
 .predictbox {
-  width: 92%;
-  margin: 1.5rem auto;
-  background-color: rgba(255, 255, 255, 0.85);
+  width: 80%;           /* เล็กลงจาก 92% */
+  margin: 1rem auto;    /* ลด margin */
+  background-color: rgba(255, 255, 255, 0.9);
   color: black;
-  border-radius: 1.5rem;
-  box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-  padding: 1.5rem;
+  border-radius: 1rem;  /* ลดความโค้ง */
+  box-shadow: 0 6px 10px rgba(0,0,0,0.1); /* ลดเงา */
+  padding: 1rem;        /* ลด padding */
   text-align: center;
 }
-.predictbox h2 { font-weight: 800; }
-.redbox, .yellowbox, .greenbox {
-  color: black;
-  padding: 0.5rem 1.5rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.3s ease, transform 0.2s ease;
+
+.predictbox h2 { 
+  font-weight: 500; 
+  font-size: 2rem;    /* ลดขนาด font */
+  margin-bottom: 0.75rem;
 }
-.redbox { background-color: #e43e3e; }
-.redbox:hover { transform: translateY(-2px); }
-.yellowbox { background-color: #efe19d; }
-.yellowbox:hover { background-color: #ebd22c; transform: translateY(-2px); }
-.greenbox { background-color: #72dc98; }
-.greenbox:hover { background-color: #20bc4a; transform: translateY(-2px); }
+
+.redbox, .yellowbox, .greenbox {
+  color: rgb(0, 0, 0);
+  background-color: rgba(65, 83, 198, 0.545);
+  padding: 0.4rem 1rem;    /* ลด padding */
+  border-radius: 0.5rem;   /* ลดความโค้ง */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+  cursor: pointer;
+  font-size: 0.9rem;       /* ลด font */
+  transition: background-color 0.3s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  display: inline-block;
+  margin: 0.2rem;
+}
+
+.redbox:hover,
+.yellowbox:hover,
+.greenbox:hover { 
+  transform: translateY(-4px) scale(1.02); /* ลอยขึ้นเล็กน้อย */
+  box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+}
+
 
 /* Map & Table */
 .mapbox, .floodtable {
-  flex: 1;
-  min-width: 300px;
+  flex: none;
+  width: 600px;
+  height: 600px;
+  overflow: auto;
   background-color: rgba(255,255,255,0.9);
   border-radius: 20px;
   padding: 30px;
   box-shadow: 0 10px 15px rgba(0,0,0,0.1);
   color: black;
-  margin: 30px;
+  margin: 20px 40px;
 }
 table { border-collapse: collapse; width: 100%; }
 table th, table td { border: 1px solid black; padding: 0.5rem; text-align: center; }
@@ -64,18 +77,55 @@ table th, table td { border: 1px solid black; padding: 0.5rem; text-align: cente
   gap: 16px;
   justify-content: center;
 }
-.card {
-  background-color: #ffffff;
-  border-radius: 1rem;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-  width: 250px;
-  padding: 1rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
+
 .bg-red-100 { background-color: #fee2e2; }
 .bg-yellow-100 { background-color: #fef3c7; }
 .bg-green-100 { background-color: #d1fae5; }
+
+.flex-container {
+  display: flex;
+  flex-wrap: nowrap;    /* ไม่ให้ wrap */
+  justify-content: flex-start; /* เรียงจากซ้ายไปขวา */
+}
+
+@media (max-width: 768px) {
+  .mapbox, .floodtable {
+    width: 90%;        /* เต็มจอในมือถือ */
+  }
+}
+/* จังหวัด */
+.mapbox .province-box {
+  display: inline-block; /* สำคัญ */
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  cursor: pointer;
+  border-radius: 9999px; /* ให้กลมเหมือนเดิม */
+  padding: 0.75rem 1rem;
+  color: white;
+  text-align: center;
+}
+
+.mapbox .province-box:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 8px 15px rgba(0,0,0,0.25);
+}
+
+/* อำเภอ */
+.district-box {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.2s ease;
+}
+
+.district-box:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Grid item ไม่ stretch */
+/* .grid > .district-box {
+  justify-self: center;
+  align-self: start;
+} */
