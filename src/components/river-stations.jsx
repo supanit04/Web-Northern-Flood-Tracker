@@ -136,29 +136,44 @@ export default function RiverStations({
     <div className="river-stations-container" ref={componentRef}>
       {/* Header & Dropdown */}
       <div className="headers-wrapper">
-        <div className="logo-placeholder"></div>
+        <div className="logo-placeholder">
+          <img src="public/creek.png" alt="" />
+        </div>
         <div className="title-and-controls">
-          <div className="title">ปริมาณน้ำในแม่น้ำวันนี้</div>
 
-          <div className="station-select-group">
-            <span className="station-pin">📍</span>
-            <select
-              value={selectedStation}
-              onChange={(e) => setSelectedStation(e.target.value)}
-              className="station-dropdown"
-              disabled={stations.length === 0 || loading}
-            >
-              <option value="" disabled>
-                {loading ? "กำลังโหลด..." : "เลือกสถานีวัดน้ำ"}
-              </option>
-              {stations.map((s) => (
-                <option key={s} value={s}>
-                  {s}
-                </option>
-              ))}
-            </select>
-            <div className="station-name-label">{selectedStation}</div>
-          </div>
+
+  <div className="title">ปริมาณน้ำในแม่น้ำวันนี้</div>
+<div className="station-select-center">
+  <div className="station-select-group-custom">
+    {/* Label บน dropdown */}
+    <label className="dropdown-label" htmlFor="station-dropdown">
+      เลือกสถานีวัดน้ำ
+    </label>
+
+
+    <div className="dropdown-wrapper">
+    <span className="pin-icon">📍</span>
+      <select
+        id="station-dropdown"
+        value={selectedStation}
+        onChange={(e) => setSelectedStation(e.target.value)}
+        className="dropdown-custom"
+        disabled={stations.length === 0 || loading}
+      >
+        <option value="" disabled>
+          {loading ? "กำลังโหลด..." : "เลือกสถานี"}
+        </option>
+        {stations.map((s) => (
+          <option key={s} value={s}>
+            {s}
+          </option>
+        ))}
+      </select>
+      <span className="dropdown-arrow">▼</span>
+    </div>
+  </div>
+</div>
+
         </div>
       </div>
 

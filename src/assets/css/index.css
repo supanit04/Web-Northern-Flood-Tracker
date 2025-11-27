@@ -18,15 +18,24 @@ html, body {
 }
 
 .title {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;   /* ← ชิดซ้ายเหมือนกันเป๊ะ */
   line-height: 1.2;
+  padding-top: 15px;
 }
+
 .title .th {
-  font-weight: bold;
+  font-weight: 700;
   font-size: 24px;
+  margin: 0;
 }
+
 .title .en {
+  font-weight: 700;
   font-size: 13px;
-  font-weight: bold;
+  margin: 0;
+  margin-top: 2px; /* ให้ห่างจากบรรทัดบนเล็กน้อย */
 }
 
 nav {

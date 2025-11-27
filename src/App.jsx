@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
+
+// Components
 import Agency from "./agency";
 import StationCards from "./components/river-stations.jsx";
-import Prediction from "./components/Prediction.jsx"; // ปรับ path ให้ตรงกับที่เก็บไฟล์
+import Prediction from "./components/Prediction.jsx";
+import ForecastSelector from "./components/ForecastSelector.jsx"; // <--- 1. เพิ่ม Import ตรงนี้
 
 const provinces = [
   { name: "เชียงราย", districts: ["เมืองเชียงราย", "เวียงชัย", "แม่ลาว", "แม่จัน","ดอยหลวง","พาน","พญาเม็งราย","เวียงเชียงรุ้ง","ป่าแดด","แม่สรวย","เชียงแสน","ขุนตาล","แม่สาย","เทิง","แม่ฟ้าหลวง","เวียงป่าเป้า","เวียงแก่น","เชียงของ"], color: "bg-blue-40" },
@@ -17,12 +20,18 @@ const provinces = [
   { name: "อุตรดิตถ์", districts: ["เมือง", "ลับแล", "ตรอน", "ท่าปลา","ทองแสนชัย","พิชัย","น้ำปาด","ฟากท่า","บ้านโคก"],color: "bg-blue" },
 ];
 
-// Flood Data (ตัวอย่าง)
-
-
 function Home() {
   const [selectedProvince, setSelectedProvince] = useState(null);
   const [selectedDistrict, setSelectedDistrict] = useState(null);
+  
+  // Date Logic (คงเดิม)
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const [selectedDate, setSelectedDate] = useState(yesterday);
+
+  // *ลบตัวแปร day1, day2, day3 และ formatThaiDate ออก 
+  // เพราะย้ายไปทำงานข้างใน ForecastSelector แล้ว*
 
   const handleProvinceSelect = (provinceName) => {
     setSelectedProvince(provinceName);
@@ -35,24 +44,20 @@ function Home() {
 
   return (
     <main>
-      {/* Forecast box */}
-      <section className="predictbox">
-        <h2>คาดการณ์อุทกภัย 72 ชั่วโมงล่วงหน้า</h2>
-        <div className="flex justify-center gap-4">
-          <div className="redbox">
-            โปรดระวังน้ำท่วมฉับพลันในหลายพื้นที่<br />
-            วันที่ 30 ส.ค. 2568
-          </div>
-          <div className="yellowbox">
-            พรุ่งนี้<br />31 ส.ค. 2568
-          </div>
-          <div className="greenbox">
-            วันจันทร์<br />1 ก.ย. 2568
-          </div>
-        </div>
+      
+      {/* ------------------------------------------------------- */}
+      {/* 2. เปลี่ยนแค่ตรง Forecast Box เป็น Component ใหม่ตามรูป */}
+      {/* ------------------------------------------------------- */}
+      <section className="pt-8 px-4 flex justify-center bg-gray-50 pb-6">
+         <ForecastSelector 
+            selectedDate={selectedDate} 
+            onDateSelect={setSelectedDate} 
+         />
       </section>
+      {/* ------------------------------------------------------- */}
 
-      {/* Main content */}
+
+      {/* Main content (Map & Table) - เหมือนเดิม */}
       <section className="flex flex-wrap justify-center mt-6 gap-4 px-6">
         {/* Map */}
         <div className="mapbox w-[300px] h-[600px] bg-gray-50 p-4 rounded-lg shadow-md overflow-auto">
@@ -76,7 +81,7 @@ function Home() {
             <div className="bg-gray-100 p-4 rounded-lg">
               <button
                 onClick={() => setSelectedProvince(null)}
-                className="mb-3 px-3 py-1 bg-gray-300 rounded hover:bg-gray-400 transition"
+                className="back-button mb-3 px-3 py-1 rounded transition"
               >
                 ← กลับไปเลือกจังหวัด
               </button>
@@ -84,10 +89,8 @@ function Home() {
                 {selectedProvinceData?.districts.map((d) => (
                   <div
                     key={d}
-                    className={`district-box p-2 text-center rounded-md cursor-pointer transition ${
-                      selectedDistrict === d
-                        ? "bg-blue-600 text-white"
-                        : "bg-white hover:bg-blue-100"
+                    className={`district-box ${
+                      selectedDistrict === d ? "district-selected" : "district-normal"
                     }`}
                     onClick={() => setSelectedDistrict(d)}
                   >
@@ -99,28 +102,24 @@ function Home() {
           )}
         </div>
 
-        {/* Flood Table */}
-        <div className="floodtable w-[600px] h-[600px] overflow-auto p-4 bg-gray-50 rounded-lg">
-          <h2 className="font-semibold mb-3 text-center text-lg">สถานการณ์น้ำท่วม</h2>
-           {/* Prediction Table */}
-      <section className="mt-6 px-6">
-       <Prediction 
-  provinceFilter={selectedProvince} 
-  districtFilter={selectedDistrict} 
-/>
-
-      </section>
-        </div>
+        {/* Prediction Table */}
+        <section className="mt-6 px-6">
+          <Prediction 
+            provinceFilter={selectedProvince} 
+            districtFilter={selectedDistrict} 
+            selectedDate={selectedDate}
+          />
+        </section>
+       
       </section>
 
-      {/* River Stations */}
+      {/* River Stations - เหมือนเดิม */}
       <section className="flex flex-wrap mt-6 gap-4 px-6">
         <div style={{ padding: "32px", width: "100%" }}>
-          <h1 className="text-2xl font-bold mb-4 text-center">River Stations (Northern Thailand)</h1>
           <StationCards
             provinceFilter={selectedProvince}
             districtFilter={selectedDistrict}
-            scrollToSelf={!!selectedDistrict}
+            selectedDate={selectedDate}
           />
         </div>
       </section>

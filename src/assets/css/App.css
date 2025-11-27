@@ -86,6 +86,7 @@ table th, table td { border: 1px solid black; padding: 0.5rem; text-align: cente
   display: flex;
   flex-wrap: nowrap;    /* ไม่ให้ wrap */
   justify-content: flex-start; /* เรียงจากซ้ายไปขวา */
+  
 }
 
 @media (max-width: 768px) {
@@ -93,6 +94,8 @@ table th, table td { border: 1px solid black; padding: 0.5rem; text-align: cente
     width: 90%;        /* เต็มจอในมือถือ */
   }
 }
+
+
 /* จังหวัด */
 .mapbox .province-box {
   display: inline-block; /* สำคัญ */
@@ -123,7 +126,28 @@ table th, table td { border: 1px solid black; padding: 0.5rem; text-align: cente
   transform: translateY(-5px) scale(1.02);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
+.district-selected {
+  background-color: #2563eb !important; /* blue-600 */
+  color: white !important;
+}
 
+.district-normal {
+  background-color: white !important;
+  color: black !important;
+}
+
+.district-normal:hover {
+  background-color: #dbeafe !important; /* blue-100 */
+}
+
+.back-button {
+  background-color: #d1d5db !important; /* gray-300 */
+  color: black !important;
+}
+
+.back-button:hover {
+  background-color: #9ca3af !important; /* gray-400 */
+}
 /* Grid item ไม่ stretch */
 /* .grid > .district-box {
   justify-self: center;

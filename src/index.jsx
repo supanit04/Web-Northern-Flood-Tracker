@@ -18,8 +18,8 @@ function Header() {
       <div className="logo-area">
         <img src="/mfu-logo.png" alt="โลโก้" width={50} height={50} />
         <div className="title">
-          <div className="th">ติดตามสถานการณ์อุทกภัยภาคเหนือของประเทศไทย</div>
-          <div className="en">Northern Flood Forecasting System</div>
+          <div className="th text-white">ติดตามสถานการณ์อุทกภัยภาคเหนือของประเทศไทย</div>
+          <div className="en text-white ">Northern Flood Forecasting System</div>
         </div>
       </div>
 

@@ -1,187 +1,192 @@
-/* ===========================
-   🎨 PREDICTION PAGE STYLING
-   =========================== */
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap');
 
-/* พื้นที่หลัก */
-.prediction-panel {
-  background-color: #ffffff;
+/* Main Wrapper */
+.prediction-wrapper {
+  font-family: 'Sarabun', sans-serif;
+  width: 100%;
+  max-width: 950px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Card Container */
+.table-card {
+  background: white;
   border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  font-family: "Sarabun", sans-serif;
-  color: #333;
-}
-
-/* ===========================
-   🔍 ส่วนตัวกรอง (Dropdown)
-   =========================== */
-.filter-controls {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
   display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 16px;
+  flex-direction: column;
 }
 
-.filter-dropdown {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  background-color: #f9f9f9;
-  font-size: 0.95rem;
-  min-width: 160px;
-  transition: 0.2s;
-}
-
-.filter-dropdown:hover {
-  border-color: #0078d4;
-  background-color: #fff;
-}
-
-/* ===========================
-   📊 ตารางแสดงข้อมูล
-   =========================== */
-.prediction-table-wrap {
+/* Table Responsive */
+.table-responsive {
+  width: 100%;
   overflow-x: auto;
-  border: 1px solid #ddd;
-  border-radius: 8px;
 }
 
-.prediction-table {
+.custom-table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 600px;
+}
+
+/* Header Styling */
+.custom-table thead th {
+  background-color: #c2dfff;
+  color: #003d79;
+  /* แก้ไข: ลด padding บนล่างเหลือ 10px (เดิม 16px) */
+  padding: 10px 16px; 
+  font-size: 16px;
+  font-weight: 700;
+  border-bottom: 2px solid #a8cce8;
+}
+
+/* Body Styling */
+.custom-table tbody tr {
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s;
+}
+
+.custom-table tbody tr:nth-child(even) {
+  background-color: #f8fbff;
+}
+
+.custom-table tbody tr:hover {
+  background-color: #eef6ff;
+}
+
+.custom-table td {
+  /* แก้ไข: ลด padding บนล่างเหลือ 8px (เดิม 14px) */
+  padding: 8px 16px;
+  font-size: 15px;
+  color: #333;
+  vertical-align: middle;
+}
+
+/* --- Badge Base Style --- */
+.badge {
+  display: inline-block;
+  /* แก้ไข: ลด padding ปุ่มให้เล็กลง เพื่อให้บรรทัดไม่สูงเกินไป */
+  padding: 5px 12px; 
+  border-radius: 20px;
+  font-size: 13px; /* แก้ไข: ลดขนาดตัวอักษรในปุ่มนิดหน่อย */
+  font-weight: 600;
+  min-width: 90px; /* แก้ไข: ลดความกว้างขั้นต่ำลงนิดหน่อย */
   text-align: center;
 }
 
-.prediction-table th {
-  background-color: #e6f3ff;
-  color: #003366;
-  font-weight: bold;
-  padding: 10px;
-  border-bottom: 2px solid #aaccee;
-}
-
-.prediction-table td {
-  padding: 10px;
-  border-bottom: 1px solid #e0e0e0;
-}
-
-.prediction-table tr:nth-child(even) {
-  background-color: #fafafa;
-}
-
-/* ===========================
-   🔴 สีสถานะ (status-badge)
-   =========================== */
-.status-badge {
-  display: inline-block;
-  padding: 5px 12px;
-  border-radius: 12px;
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: white;
-  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-}
-
-/* สถานะน้ำท่วม */
+/* Status Colors (เหมือนเดิม) */
 .status-flood {
-  background-color: #e74c3c; /* แดง */
+  background-color: #ffeaea;
+  color: #d32f2f;
+  border: 1px solid #ffcdcd;
 }
 
-/* สถานะเฝ้าระวัง */
-.status-watch {
-  background-color: #f7b731; /* เหลือง */
-  color: #333; /* ตัวหนังสือเข้ม อ่านง่ายบนเหลือง */
+.status-warning {
+  background-color: #fff9c4;
+  color: #f57f17;
+  border: 1px solid #fff176;
 }
 
-/* สถานะปกติ */
-.status-ok {
-  background-color: #2ecc71; /* เขียว */
+.status-normal {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+/* ---------------------------------- */
+
+/* No Data */
+.no-data {
+  text-align: center;
+  padding: 30px; /* ลดลงจาก 40px */
+  color: #888;
 }
 
-/* ===========================
-   📄 ส่วนท้ายตาราง (Footer)
-   =========================== */
-.prediction-footer {
-  margin-top: 20px;
+/* Footer Styling */
+.table-footer {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.footer-left-controls {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.95rem;
-}
-
-.footer-right-controls {
-  display: flex;
-  align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.label {
-  color: #555;
-}
-
-.items-per-page-dropdown {
-  padding: 4px 8px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  align-items: center;
+  /* แก้ไข: ลด padding footer ให้บางลง */
+  padding: 8px 20px;
   background-color: #fff;
-  font-size: 0.9rem;
+  border-top: 1px solid #eee;
 }
 
-.summary {
-  color: #333;
-  font-size: 0.9rem;
+/* Footer Left */
+.footer-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #666;
 }
 
-/* ปุ่มเปลี่ยนหน้า */
+.items-select {
+  padding: 2px 6px; /* ลดขนาด select box */
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+/* Footer Right */
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.showing-text {
+  font-size: 14px;
+  color: #666;
+}
+
 .pagination-controls {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
 }
 
-.pagination-controls button {
-  background-color: #0078d4;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  padding: 4px 10px;
+.page-btn {
+  background: none;
+  border: 1px solid transparent;
+  font-size: 18px;
   cursor: pointer;
+  color: #555;
+  padding: 0 6px; /* ลด padding ปุ่มเปลี่ยนหน้า */
+  border-radius: 4px;
   transition: 0.2s;
 }
 
-.pagination-controls button:hover:not(:disabled) {
-  background-color: #005a9e;
+.page-btn:hover:not(:disabled) {
+  background-color: #f0f0f0;
 }
 
-.pagination-controls button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
+.page-btn:disabled {
+  color: #ccc;
+  cursor: default;
 }
 
-.page-number-input input {
-  width: 50px;
+.page-input {
+  width: 40px; /* ลดความกว้าง */
+  height: 30px; /* ลดความสูง */
   text-align: center;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  padding: 4px;
-  font-size: 0.9rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  outline: none;
 }
 
-/* ===========================
-   📅 วันที่ข้อมูล
-   =========================== */
-.date-caption {
-  margin-top: 8px;
-  text-align: right;
-  font-size: 0.85rem;
-  color: #777;
-  font-style: italic;
+.page-input:focus {
+  border-color: #2196f3;
+}
+
+/* Update Label */
+.update-label {
+  margin-top: 10px; /* ลดระยะห่าง */
+  color: #ffffff;
+  font-size: 14px;
+  text-align: right; 
 }
