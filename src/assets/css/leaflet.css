@@ -1,81 +1,110 @@
-/* ============================
-   🌐 Sidebar Styles
-   ============================ */
 
-.sidebar {
-  width: 150px;
-  padding: 8px;
-  background: #fff;
-  font-size: 12px;
+
+.sidebar-group select {
+  width: 100%;           /* ขยายเต็ม group */
+  height: 36px;
+  padding: 6px 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  transition: 0.2s all;
+}
+
+.sidebar-group select:focus {
+  border-color: #3b3b3e;
+  outline: none;
+  box-shadow: 0 0 4px rgba(63, 81, 181, 0.3);
+}
+
+/* Button */
+.sidebar-group button {
+  width: 100%;           /* ขยายเท่ากับ select */
+  height: 36px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  background-color: #c9d8ea;
+  color: #232222;
+  cursor: pointer;
+  transition: 0.2s all;
+}
+
+.sidebar-group button:hover {
+  background-color: #b1b8e8;
+}
+
+/* button group fix */
+.button-group {
+  display: flex;               /* ต้องมี */
+  flex-direction: row !important; /* ให้วางแนวนอน */
+  align-items: center;         /* จัดกลางตามแกน Y */
+  justify-content: flex-start; /* จัดชิดซ้าย ถ้าต้องการ */
+  gap: 12px;                   /* ช่องว่างระหว่างปุ่ม/element */
+}
+
+.sidebar.horizontal label {
+  margin: 0;
+}
+.sidebar-group {
   display: flex;
   flex-direction: column;
+  gap: 4px;
+  flex: 1; /* ให้ขยายเต็มที่ใน sidebar */
+}
+
+.sidebar.horizontal select,
+.sidebar.horizontal button {
+  height: 30px;
+  padding: 4px 6px;
+  font-size: 12px;
+  flex-shrink: 0; /* ป้องกันถูกบีบ */
+}
+
+/* Map vertical layout */
+.map-layout-vertical {
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  width: 100%;
+}
+
+.map-layout-horizontal {
+  display: flex;
+  flex-direction: row; /* sidebar + map */
+  height: 500px;       /* หรือ 100vh */
+  width: 100%;
+}
+
+.map-layout-horizontal .leaflet-container {
+  flex: 1;
+  min-height: 0;
+}
+
+.sidebar.horizontal button {
+  margin: 0; /* เอา margin-top ของปุ่มออก */
+}
+
+.sidebar.horizontal {
+  display: flex;
+  flex-direction: row; /* ให้อยู่แนวตั้ง */
+  align-items: center; /* จัดกลางตามแกน Y */
+  gap: 12px;              /* ช่องว่างระหว่าง group */
+  padding: 8px;
+  background: transparent;
+  width: auto;           /* กำหนดขนาด sidebar */
   flex-shrink: 0;
 }
 
-.sidebar label {
-  margin-top: 6px;
-  margin-bottom: 4px;
-  font-weight: 600;
-}
 
-.sidebar select {
-  width: 100%;
-  padding: 6px;
-  margin-bottom: 8px;
+.sidebar-group select,
+.sidebar-group button {
+  height: 30px;
   font-size: 12px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.sidebar button {
-  margin-top: 10px;
-  padding: 6px;
-  width: 100%;
-  font-size: 12px;
-  border: none;
-  cursor: pointer;
-  background: #e0e0e0;
-  border-radius: 4px;
-  transition: background 0.2s;
-}
-
-.sidebar button:hover {
-  background: #d5d5d5;
-}
-
-/* ============================
-   🌐 Layout Wrapper
-   ============================ */
-
-.map-layout {
-  display: flex;
-  height: 500px;
-  width: 100%;
-  gap: 0px;
-
-}
-.map-layout .leaflet-container {
-    flex: 1;
-    min-width: none;
-}
-
-.mapbox {
-  display: flex;
-  flex-direction: column;
-  height: 600px; /* ควบคุมความสูง fix */
-  position: relative;
-}
-
-.mapbox h2 {
-  flex-shrink: 0; /* ป้องกันไม่ให้ถูกบีบจนหาย */
-}
-
-.map-container {
-  flex: 1;
-  min-height: 0; /* ป้องกัน overflow */
-}
-
-.map-content{
-    flex: 1;
-    min-width: none;
+  padding: 4px 6px;
+  min-width: 120px;
+  width: 100%;           /* ให้เต็ม group */
+  box-sizing: border-box;
 }

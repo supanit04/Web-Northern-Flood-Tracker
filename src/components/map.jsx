@@ -33,9 +33,18 @@ export default function RiverMap({onProvinceSelect, onDistrictSelect,}) {
     });
   }, []);
 
+  
+const zoomToFeature = (feature) => {
+  const map = mapRef.current;
+  if (!map || !feature) return;
+
+  const layer = L.geoJSON(feature);              // สร้างชั้นชั่วคราวจาก GeoJSON
+  const bounds = layer.getBounds();              // หา bounds ของ feature
+  map.fitBounds(bounds, { padding: [50, 50] });  // ซูม fitBounds พร้อม padding
+};
   const getSubdistrictColor = (code) => {
     const data = floodData.find((d) => d.subdistrict_code === code);
-    if (!data) return "#2438bdff";
+    if (!data) return "#4caf50";
 
     let [today, tmr, next] = data.forecast;
     if (today === 1) return "#d32f2f"; 
@@ -45,7 +54,7 @@ export default function RiverMap({onProvinceSelect, onDistrictSelect,}) {
 
   const getAggregateColor = (code, type) => {
   if (highlightNorth && type === "province") {
-    return "#80aaffff"; // ตัวอย่างสีไฮไลท์จังหวัดภาคเหนือ
+    return "#4caf50"; // ตัวอย่างสีไฮไลท์จังหวัดภาคเหนือ
   }
 
   let children = floodData.filter(d =>
@@ -88,7 +97,7 @@ export default function RiverMap({onProvinceSelect, onDistrictSelect,}) {
 
   if(level === "province") {
     if(highlightNorth && NORTH_CODES.includes(p.pro_code)) {
-      color = "#8093ffff"; // ไฮไลท์ภาคเหนือ
+      color = "#4caf50"; // ไฮไลท์ภาคเหนือ
     } else {
       color = getAggregateColor(p.pro_code, "province");
     }
@@ -109,10 +118,11 @@ export default function RiverMap({onProvinceSelect, onDistrictSelect,}) {
 };
 
   const resetMap = () => {
-    setLevel("province");
-    setSelectedProvince("");
-    setSelectedDistrict("");
-  };
+  setLevel("province");
+  setSelectedProvince("");
+  setSelectedDistrict("");
+  setHighlightNorth(true); // 🌟 ไฮไลท์จังหวัดภาคเหนือ
+};
 
   // Pick what to show
   let displayData = provinces;
@@ -120,100 +130,108 @@ export default function RiverMap({onProvinceSelect, onDistrictSelect,}) {
   if (level === "subdistrict") displayData = subdistricts.filter(s => s.properties.amp_code === selectedDistrict);
 
   return (
-  <div className="map-layout">
+  <div className="map-layout-vertical">
     
     {/* Sidebar */}
-    <div className="sidebar">
+  <div className="sidebar horizontal">
 
-      <label>จังหวัด</label>
-      <select
-         value={selectedProvince}
-  onChange={(e) => {
-    const code = e.target.value;
-    setSelectedProvince(code);
-    setSelectedDistrict("");
-    setLevel("district");
-    onProvinceSelect?.(code);
-    onDistrictSelect?.("");
+  <div className="sidebar-group">
+    <label>จังหวัด</label>
+    <select
+      value={selectedProvince}
+      onChange={(e) => {
+        const code = e.target.value;
+        setSelectedProvince(code);
+        setSelectedDistrict("");
+        setLevel("district");
+        onProvinceSelect?.(code);
+        onDistrictSelect?.("");
 
-
-    const provinceFeature = provinces.find(p => p.properties.pro_code === code);
-    if (provinceFeature && mapRef.current) {
-      const layer = L.geoJSON(provinceFeature);
-      mapRef.current.fitBounds(layer.getBounds());
-    }
-        }}
-      >
-        <option value="">-- เลือกจังหวัด --</option>
-        {provinces
-          .sort((a, b) => a.properties.pro_th.localeCompare(b.properties.pro_th))
-          .map((p) => (
-            <option key={p.properties.pro_code} value={p.properties.pro_code}>
-              {p.properties.pro_th}
-            </option>
-          ))}
-      </select>
-
-      <label>อำเภอ</label>
-      <select
-        disabled={!selectedProvince}
-        value={selectedDistrict}
-        onChange={(e) => {
-          setSelectedDistrict(e.target.value);
-          setLevel("subdistrict");
-          onDistrictSelect?.(e.target.value);
-        }}
-      >
-        <option value="">-- เลือกอำเภอ --</option>
-        {districts
-          .filter((d) => d.properties.pro_code === selectedProvince)
-          .sort((a, b) => a.properties.amp_th.localeCompare(b.properties.amp_th))
-          .map((d) => (
-            <option key={d.properties.amp_code} value={d.properties.amp_code}>
-              {d.properties.amp_th}
-            </option>
-          ))}
-      </select>
-
-      <button
-       onClick={() => {
-    setLevel("province");
-    setSelectedProvince("");
-    setSelectedDistrict("");
-    setHighlightNorth(true); // เปิด highlight
-    if (mapRef.current) {
-      mapRef.current.setView([18.8, 99.0], 8);
-    }
-  }}
->
-  🔄 ภาพรวม
-      </button>
-    </div>
-
-    {/* Map */}
-    <MapContainer
-      ref={mapRef}
-      center={[18.8, 99.0]}
-      zoom={8}
-      minZoom={7}
-      style={{ height: "100%", width: "100%" }}
+        const feature = provinces.find(p => p.properties.pro_code === code);
+  if (feature) zoomToFeature(feature);
+      }}
     >
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      <GeoJSON
-        key={level + selectedProvince + selectedDistrict}
-        data={displayData}
-        style={styleFeature}
-        onEachFeature={(feature, layer) => {
-          layer.bindTooltip(
-            feature.properties.pro_th ||
-            feature.properties.amp_th ||
-            feature.properties.tam_th
-          );
-          layer.on("click", () => onFeatureClick(feature));
-        }}
-      />
-    </MapContainer>
-
+      <option value="">-- เลือกจังหวัด --</option>
+      {provinces
+        .sort((a, b) => a.properties.pro_th.localeCompare(b.properties.pro_th))
+        .map((p) => (
+          <option key={p.properties.pro_code} value={p.properties.pro_code}>
+            {p.properties.pro_th}
+          </option>
+        ))}
+    </select>
   </div>
+
+  <div className="sidebar-group">
+    <label>อำเภอ</label>
+    <select
+      disabled={!selectedProvince}
+      value={selectedDistrict}
+      onChange={(e) => {
+        const code = e.target.value;
+  setSelectedDistrict(code);
+  setLevel("subdistrict");
+  onDistrictSelect?.(code);
+
+   const feature = districts.find(d => d.properties.amp_code === code);
+  if (feature) zoomToFeature(feature);
+      }}
+    >
+      <option value="">-- เลือกอำเภอ --</option>
+      {districts
+        .filter((d) => d.properties.pro_code === selectedProvince)
+        .sort((a, b) => a.properties.amp_th.localeCompare(b.properties.amp_th))
+        .map((d) => (
+          <option key={d.properties.amp_code} value={d.properties.amp_code}>
+            {d.properties.amp_th}
+          </option>
+        ))}
+    </select>
+  </div>
+
+<div className="sidebar-group">
+      <label>&nbsp;</label> {/* เว้นให้ label สวย */}
+      <button onClick={resetMap}>🔄ภาพรวม</button>
+    </div>
+</div>
+
+  {/* Map */}
+  <MapContainer
+    ref={mapRef}
+    center={[18.8, 99.0]}
+    zoom={8}
+    minZoom={7}
+    style={{ height: "100%", width: "100%" }}
+  >
+    <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+    <GeoJSON
+      key={level + selectedProvince + selectedDistrict}
+      data={displayData}
+      style={styleFeature}
+      onEachFeature={(feature, layer) => {
+        layer.bindTooltip(
+          feature.properties.pro_th ||
+          feature.properties.amp_th ||
+          feature.properties.tam_th
+        );
+        layer.on("click", () => onFeatureClick(feature));
+      }}
+    />
+  </MapContainer>
+<div style={{ marginTop: "8px", display: "flex", gap: "16px", justifyContent: "center" }}>
+  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+    <div style={{ width: "20px", height: "20px", backgroundColor: "#d32f2f" }}></div>
+    <span>เกิดน้ำท่วม</span>
+  </div>
+  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+    <div style={{ width: "20px", height: "20px", backgroundColor: "#fdd835" }}></div>
+    <span>เสี่ยงเกิดน้ำท่วม</span>
+  </div>
+  <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+    <div style={{ width: "20px", height: "20px", backgroundColor: "#4caf50" }}></div>
+    <span>ปกติ</span>
+  </div>
+  </div>
+</div>
 );
-}
+} 
