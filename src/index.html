@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ระบบพยากรณ์น้ำท่วม (Northern Zone Only)</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        body { margin: 0; font-family: 'Sarabun', sans-serif; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* Sidebar */
+        #sidebar {
+            width: 320px; background: #fff; padding: 20px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 1000;
+            display: flex; flex-direction: column; gap: 15px; overflow-y: auto;
+        }
+        
+        h2 { margin-top: 0; color: #2c3e50; }
+        label { font-weight: bold; color: #34495e; margin-top: 10px; display: block;}
+        select {
+            width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #bdc3c7;
+            font-family: 'Sarabun'; font-size: 16px; background-color: #f9f9f9;
+        }
+        select:disabled { background-color: #e0e0e0; cursor: not-allowed; }
+
+        button {
+            padding: 12px; background: #3498db; color: white; border: none;
+            border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px;
+            transition: background 0.3s;
+        }
+        button:hover { background: #2980b9; }
+        
+        /* Map Area */
+        #map { flex-grow: 1; height: 100%; background: #ddd; /* สีพื้นหลังนอกแผนที่ */ }
+
+        /* Legend */
+        .legend-box {
+            background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef;
+        }
+        .legend-item { display: flex; align-items: center; margin-bottom: 8px; font-size: 14px; }
+        .dot { width: 14px; height: 14px; border-radius: 50%; margin-right: 10px; border: 1px solid rgba(0,0,0,0.1); }
+        
+        /* Loading Overlay */
+        #loading {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255,255,255,0.9); z-index: 2000;
+            display: flex; justify-content: center; align-items: center;
+            flex-direction: column; font-size: 1.2rem; color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="sidebar">
+        <h2>🌊 ภาคเหนือ</h2>
+        
+        <div>
+            <label>จังหวัด:</label>
+            <select id="sel-province" onchange="selectProvince()">
+                <option value="">-- เลือกจังหวัด --</option>
+            </select>
+        </div>
+
+        <div>
+            <label>อำเภอ:</label>
+            <select id="sel-district" onchange="selectDistrict()" disabled>
+                <option value="">-- เลือกอำเภอ --</option>
+            </select>
+        </div>
+
+        <button onclick="resetMap()">🔄 ดูภาพรวมภาคเหนือ</button>
+
+        <div class="legend-box">
+            <h4>สถานการณ์น้ำ</h4>
+            <div class="legend-item"><span class="dot" style="background:#d32f2f"></span> ท่วมวันนี้ / วิกฤต (แดง)</div>
+            <div class="legend-item"><span class="dot" style="background:#f57f17"></span> ท่วมบางส่วน (ส้ม)</div>
+            <div class="legend-item"><span class="dot" style="background:#fdd835"></span> เฝ้าระวัง (เหลือง)</div>
+            <div class="legend-item"><span class="dot" style="background:#4caf50"></span> ปกติ (เขียว)</div>
+        </div>
+    </div>
+
+    <div id="map"></div>
+    
+    <div id="loading">
+        <div style="margin-bottom:15px;">⏳ กำลังโหลดข้อมูล...</div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script>
+        // --- 1. ตั้งค่าแผนที่ (ล็อกโซนภาคเหนือ) ---
+        
+        // กำหนดขอบเขตล็อก (SouthWest, NorthEast) ครอบคลุม 9 จังหวัด
+        var northBounds = L.latLngBounds(
+            L.latLng(17.0, 97.0), // มุมซ้ายล่าง (แถวตาก/พม่า)
+            L.latLng(20.6, 101.5) // มุมขวาบน (แถวเชียงราย/ลาว)
+        );
+
+        var map = L.map('map', {
+            center: [18.8, 99.0], // จุดกึ่งกลางภาคเหนือ
+            zoom: 8,
+            minZoom: 7,           // ห้ามซูมออกไกลกว่านี้ (กันเห็นทั้งโลก)
+            maxBounds: northBounds, // ล็อกขอบเขตห้ามเลื่อนออก
+            maxBoundsViscosity: 1.0 // ความหนืดขอบเขต (1.0 = แข็งโป๊ก เลื่อนไม่ไปเลย)
+        });
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        var currentLayer = null;
+        var floodData = []; 
+        var geoData = { provinces: [], districts: [], subdistricts: [] };
+
+        // รหัส 9 จังหวัดภาคเหนือ
+        const NORTH_CODES = ['50', '51', '52', '53', '54', '55', '56', '57', '58'];
+
+        // --- 2. Logic การกำหนดสี ---
+        function getSubdistrictColor(subCode) {
+            let data = floodData.find(d => d.subdistrict_code === subCode);
+            if (!data) return '#cfd8dc'; // ไม่มีข้อมูล
+
+            let [today, tmr, next] = data.forecast;
+            if (today === 1) return '#d32f2f'; // แดง
+            if (tmr === 1 || next === 1) return '#fdd835'; // เหลือง
+            return '#4caf50'; // เขียว
+        }
+
+        function getAggregateColor(code, type) {
+            let children = floodData.filter(d => {
+                if (type === 'province') return d.province_code === code;
+                if (type === 'district') return d.district_code === code;
+                return false;
+            });
+
+            if (children.length === 0) return '#4caf50'; 
+
+            let floodedCount = children.filter(d => d.forecast[0] === 1).length;
+            let percentage = (floodedCount / children.length) * 100;
+
+            if (percentage > 20) return '#d32f2f'; // แดง
+            if (percentage > 0) return '#f57f17';  // ส้ม
+            return '#4caf50'; // เขียว
+        }
+
+        // --- 3. ฟังก์ชันโหลดข้อมูล ---
+        async function initSystem() {
+            try {
+                let [resPro, resDis, resSub, resFlood] = await Promise.all([
+                    fetch('data/provinces.geojson'),
+                    fetch('data/districts.geojson'),
+                    fetch('data/subdistricts.geojson'),
+                    fetch('flood_data.json')
+                ]);
+
+                if (!resPro.ok || !resDis.ok || !resSub.ok) throw new Error("โหลดไฟล์ไม่สำเร็จ");
+
+                let pJson = await resPro.json();
+                let dJson = await resDis.json();
+                let sJson = await resSub.json();
+                floodData = await resFlood.json();
+
+                // *** กรองข้อมูลเฉพาะภาคเหนือ (สำคัญมาก) ***
+                // เก็บเฉพาะ 9 จังหวัดที่ต้องการ
+                geoData.provinces = pJson.features.filter(f => NORTH_CODES.includes(f.properties.pro_code));
+                
+                // เก็บอำเภอ เฉพาะที่ขึ้นต้นด้วยรหัสภาคเหนือ
+                geoData.districts = dJson.features.filter(f => NORTH_CODES.includes(f.properties.pro_code));
+                
+                // เก็บตำบล เฉพาะที่ขึ้นต้นด้วยรหัสภาคเหนือ
+                geoData.subdistricts = sJson.features.filter(f => NORTH_CODES.includes(f.properties.pro_code));
+
+                setupDropdowns();
+                
+                // วาดแผนที่เริ่มต้น
+                renderMap(geoData.provinces, 'province');
+                
+                // สั่งให้แผนที่ Fit เข้าหากรอบข้อมูลภาคเหนือพอดี
+                map.fitBounds(northBounds);
+
+                document.getElementById('loading').style.display = 'none';
+
+            } catch (err) {
+                alert("Error: " + err);
+                document.getElementById('loading').innerHTML = `<span style='color:red'>${err}</span>`;
+            }
+        }
+
+        // --- 4. Render Map Function ---
+        function renderMap(features, level) {
+            if (currentLayer) map.removeLayer(currentLayer);
+
+            currentLayer = L.geoJson(features, {
+                style: function(feature) {
+                    let props = feature.properties;
+                    let color = '#ccc';
+
+                    if (level === 'province') {
+                        color = getAggregateColor(props.pro_code, 'province');
+                    } else if (level === 'district') {
+                        color = getAggregateColor(props.amp_code, 'district');
+                    } else if (level === 'subdistrict') {
+                        color = getSubdistrictColor(props.tam_code);
+                    }
+
+                    return {
+                        fillColor: color,
+                        weight: 1,
+                        opacity: 1,
+                        color: 'white',
+                        fillOpacity: 0.7
+                    };
+                },
+                onEachFeature: function(feature, layer) {
+                    let p = feature.properties;
+                    let name = p.tam_th || p.amp_th || p.pro_th;
+                    let code = p.tam_code || p.amp_code || p.pro_code;
+
+                    layer.bindTooltip(`<b>${name}</b>`, { sticky: true });
+
+                    layer.on('click', function() {
+                        if (level === 'province') {
+                            document.getElementById('sel-province').value = code;
+                            selectProvince(); 
+                        } else if (level === 'district') {
+                            document.getElementById('sel-district').value = code;
+                            selectDistrict(); 
+                        }
+                    });
+                }
+            }).addTo(map);
+
+            // ซูมเข้าไปหาพื้นที่ที่วาด
+            if (features.length > 0) {
+                map.fitBounds(currentLayer.getBounds());
+            }
+        }
+
+        // --- 5. Dropdown Logic ---
+
+        function setupDropdowns() {
+            let pSel = document.getElementById('sel-province');
+            // เรียงชื่อ ก-ฮ
+            geoData.provinces.sort((a,b) => a.properties.pro_th.localeCompare(b.properties.pro_th));
+            
+            geoData.provinces.forEach(p => {
+                let opt = document.createElement('option');
+                opt.value = p.properties.pro_code;
+                opt.text = p.properties.pro_th;
+                pSel.add(opt);
+            });
+        }
+
+        function selectProvince() {
+            let pCode = document.getElementById('sel-province').value;
+            let dSel = document.getElementById('sel-district');
+            
+            dSel.innerHTML = '<option value="">-- เลือกอำเภอ --</option>';
+            dSel.disabled = true;
+
+            if (!pCode) {
+                resetMap();
+                return;
+            }
+
+            let districtsInProv = geoData.districts.filter(d => d.properties.pro_code === pCode);
+            
+            districtsInProv.sort((a,b) => a.properties.amp_th.localeCompare(b.properties.amp_th));
+            districtsInProv.forEach(d => {
+                let opt = document.createElement('option');
+                opt.value = d.properties.amp_code;
+                opt.text = d.properties.amp_th;
+                dSel.add(opt);
+            });
+            dSel.disabled = false;
+
+            renderMap(districtsInProv, 'district');
+        }
+
+        function selectDistrict() {
+            let dCode = document.getElementById('sel-district').value;
+            if (!dCode) return;
+
+            let subdistrictsInDist = geoData.subdistricts.filter(s => s.properties.amp_code === dCode);
+            renderMap(subdistrictsInDist, 'subdistrict');
+        }
+
+        function resetMap() {
+            document.getElementById('sel-province').value = "";
+            document.getElementById('sel-district').innerHTML = '<option value="">-- เลือกอำเภอ --</option>';
+            document.getElementById('sel-district').disabled = true;
+            
+            renderMap(geoData.provinces, 'province');
+            map.fitBounds(northBounds); // กลับมาดูภาพรวมภาคเหนือ
+        }
+
+        initSystem();
+
+    </script>
+</body>
+</html>
