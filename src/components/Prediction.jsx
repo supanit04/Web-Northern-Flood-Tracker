@@ -18,30 +18,6 @@ export default function Prediction({ provinceFilter = null, districtFilter = nul
       .catch((err) => console.error(err));
   }, []);
 
-  // -------------------------
-  // Normalize Date + Filter
-  // -------------------------
-  // const filteredData = useMemo(() => {
-  //   if (!selectedDate) return floodData; // ถ้าไม่มีวันที่เลือก ให้แสดงทั้งหมด (หรือปรับตาม logic ที่ต้องการ)
-
-  //   const selectedStr =
-  //     selectedDate instanceof Date
-  //       ? selectedDate.toISOString().split("T")[0]
-  //       : selectedDate;
-
-  //   return floodData.filter((d) => {
-  //     const provinceMatch = provinceFilter ? d.province === provinceFilter : true;
-  //     const districtMatch = districtFilter ? d.district === districtFilter : true;
-      
-  //     // แปลงวันที่จาก data ให้เป็น format เดียวกันเพื่อเทียบ
-  //     const itemDate = new Date(d.date);
-  //     const itemStr = !isNaN(itemDate)
-  //       ? itemDate.toISOString().split("T")[0]
-  //       : d.date ? d.date.slice(0, 10) : "";
-
-  //     return provinceMatch && districtMatch && itemStr === selectedStr;
-  //   });
-  // }, [floodData, provinceFilter, districtFilter, selectedDate]);
 
   // -------------------------
   // 2. Filter & Date Logic (DEMO 2024 Mode)
