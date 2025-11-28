@@ -1,0 +1,38 @@
+[
+  {
+    "province_code": "56",
+    "district_code": "5601",
+    "subdistrict_code": "560101",
+    "province_name": "พะเยา",
+    "district_name": "เมืองพะเยา",
+    "subdistrict_name": "เวียง",
+    "forecast": [1, 1, 1]
+  },
+  {
+    "province_code": "56",
+    "district_code": "5601",
+    "subdistrict_code": "560102",
+    "province_name": "พะเยา",
+    "district_name": "เมืองพะเยา",
+    "subdistrict_name": "แม่ต๋ำ",
+    "forecast": [0, 1, 1]
+  },
+  {
+    "province_code": "56",
+    "district_code": "5601",
+    "subdistrict_code": "560111",
+    "province_name": "พะเยา",
+    "district_name": "เมืองพะเยา",
+    "subdistrict_name": "ท่าจำปี",
+    "forecast": [0, 0, 0]
+  },
+  {
+    "province_code": "90",
+    "district_code": "9015",
+    "subdistrict_code": "901501",
+    "province_name": "สงขลา",
+    "district_name": "สิงหนคร",
+    "subdistrict_name": "ชิงโค",
+    "forecast": [1, 0, 0]
+  }
+]

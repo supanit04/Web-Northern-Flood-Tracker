@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import "./assets/css/App.css";
 
+
 // Components
 import Agency from "./agency";
 import StationCards from "./components/river-stations.jsx";
 import Prediction from "./components/Prediction.jsx";
 import ForecastSelector from "./components/ForecastSelector.jsx"; // <--- 1. เพิ่ม Import ตรงนี้
+import RiverMap from "./components/map.jsx";
 
 const provinces = [
   { name: "เชียงราย", districts: ["เมืองเชียงราย", "เวียงชัย", "แม่ลาว", "แม่จัน","ดอยหลวง","พาน","พญาเม็งราย","เวียงเชียงรุ้ง","ป่าแดด","แม่สรวย","เชียงแสน","ขุนตาล","แม่สาย","เทิง","แม่ฟ้าหลวง","เวียงป่าเป้า","เวียงแก่น","เชียงของ"], color: "bg-blue-40" },
@@ -60,12 +62,25 @@ function Home() {
       {/* Main content (Map & Table) - เหมือนเดิม */}
       <section className="flex flex-wrap justify-center mt-6 gap-4 px-6">
         {/* Map */}
-        <div className="mapbox w-[300px] h-[600px] bg-gray-50 p-4 rounded-lg shadow-md overflow-auto">
+        <div className="mapbox bg-gray-50 rounded-lg shadow-md p-4">
           <h2 className="font-semibold mb-3 text-center text-lg">แผนที่ภาคเหนือ</h2>
-          <h2 className="font-semibold mb-3 text-center text-lg">
+           <div className="map-container">
+    <RiverMap
+      selectedProvince={selectedProvince}
+      selectedDistrict={selectedDistrict}
+      onProvinceSelect={(code) => {
+        setSelectedProvince(code);
+        setSelectedDistrict(null);
+      }}
+      onDistrictSelect={(code) => setSelectedDistrict(code)}
+    />
+  </div>
+          {/* ย้ายไปในMap.jsx */}
+          
+          {/* <h2 className="font-semibold mb-3 text-center text-lg">
             {!selectedProvince ? "เลือกจังหวัด" : `เลือกอำเภอในจังหวัด ${selectedProvince}`}
-          </h2>
-          {!selectedProvince ? (
+          </h2> */}
+          {/* {!selectedProvince ? (
             <div className="grid grid-cols-3 gap-4">
               {provinces.map((p) => (
                 <div
@@ -99,7 +114,7 @@ function Home() {
                 ))}
               </div>
             </div>
-          )}
+          )} */}
         </div>
 
         {/* Prediction Table */}

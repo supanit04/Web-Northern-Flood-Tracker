@@ -45,8 +45,11 @@ function Footer() {
         {/* ซ้าย */}
         <div className="footer-left">
           <img src="public/rain.png" alt="logo-web" width={50} />
-          <h3 className="footer-title"> Northern Flood Tracker</h3>
+          <div className="text">
+            <h3 className="footer-title"> Northern Flood Tracker</h3>
           <p className="footer-subtext">ติดตามสถานการณ์อุทกภัยภาคเหนือ</p>
+          </div>
+          
         </div>
 
         {/* ขวา */}

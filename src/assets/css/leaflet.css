@@ -1,0 +1,81 @@
+/* ============================
+   🌐 Sidebar Styles
+   ============================ */
+
+.sidebar {
+  width: 150px;
+  padding: 8px;
+  background: #fff;
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+}
+
+.sidebar label {
+  margin-top: 6px;
+  margin-bottom: 4px;
+  font-weight: 600;
+}
+
+.sidebar select {
+  width: 100%;
+  padding: 6px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.sidebar button {
+  margin-top: 10px;
+  padding: 6px;
+  width: 100%;
+  font-size: 12px;
+  border: none;
+  cursor: pointer;
+  background: #e0e0e0;
+  border-radius: 4px;
+  transition: background 0.2s;
+}
+
+.sidebar button:hover {
+  background: #d5d5d5;
+}
+
+/* ============================
+   🌐 Layout Wrapper
+   ============================ */
+
+.map-layout {
+  display: flex;
+  height: 500px;
+  width: 100%;
+  gap: 0px;
+
+}
+.map-layout .leaflet-container {
+    flex: 1;
+    min-width: none;
+}
+
+.mapbox {
+  display: flex;
+  flex-direction: column;
+  height: 600px; /* ควบคุมความสูง fix */
+  position: relative;
+}
+
+.mapbox h2 {
+  flex-shrink: 0; /* ป้องกันไม่ให้ถูกบีบจนหาย */
+}
+
+.map-container {
+  flex: 1;
+  min-height: 0; /* ป้องกัน overflow */
+}
+
+.map-content{
+    flex: 1;
+    min-width: none;
+}
