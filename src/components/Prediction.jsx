@@ -13,7 +13,8 @@ export default function Prediction({ provinceFilter = null, districtFilter = nul
   // 1. Fetch Data
   useEffect(() => {
     setLoading(true);
-    fetch("http://127.0.0.1:8000/FloodData")
+    fetch("https://back-northern-flood-tracker.onrender.com/FloodData")
+    // fetch("http://127.0.0.1:8000/FloodData")
       .then((res) => res.json())
       .then((data) => {
         setFloodData(data.data || []);
