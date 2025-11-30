@@ -37,7 +37,7 @@ function Home() {
     <main className="bg-gray-50 min-h-screen pb-10 font-sarabun">
       
       {/* 1. Forecast Selector (เลือกวัน) */}
-      <section className="pt-8 px-4 flex justify-center pb-6">
+      <section className="pt-6 px-2 flex  justify-center pb-4">
          <ForecastSelector 
             selectedDate={selectedDate} 
             onDateSelect={setSelectedDate} 
@@ -46,17 +46,10 @@ function Home() {
       </section>
 
       {/* Container หลัก */}
-      <section className="px-4 max-w-[1200px] mx-auto flex flex-col gap-6">
-        
-        {/* 2. Map Section (แผนที่เต็มความกว้าง) */}
-        <div className="w-full bg-white rounded-2xl shadow-md p-4 border border-gray-100">
-            <h2 className="font-bold mb-4 text-center text-xl text-gray-800">
-              {selectedProvince ? `แผนที่จังหวัด${selectedProvince}` : "แผนที่ภาคเหนือ"}
-            </h2>
-            
-            {/* Map Container: กำหนดความสูง */}
-            <div className="rounded-xl overflow-hidden border border-gray-200" style={{ height: "550px", position: "relative" }}>
-              
+      <section className="px-4 max-w-[1500px] mx-auto flex flex-row">
+        {/* 2. River Map (แผนที่) */}
+        <div className=" flex flex-row">
+            <div className="mapbox w-[500px] h-[600px] bg-gray-50 p-4 rounded-lg shadow-md ">  
               <RiverMap
                 selectedProvince={selectedProvince}
                 selectedDistrict={selectedDistrict}
@@ -71,10 +64,10 @@ function Home() {
                 selectedDayIndex={selectedDayIndex}
               />
             </div>
-        </div>
+          </div>  
 
         {/* 3. Prediction Table (ตารางแสดงผล) */}
-        <div className="w-full">
+        <div className="w-full flex flex-row">
            <Prediction 
               provinceFilter={selectedProvince} 
               districtFilter={selectedDistrict} 
