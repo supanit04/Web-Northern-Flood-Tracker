@@ -1,133 +1,143 @@
 import React, { useEffect, useState, useMemo } from "react";
 import "../assets/css/Prediction.css";
 
-export default function Prediction({ provinceFilter = null, districtFilter = null, selectedDate }) {
+export default function Prediction({ provinceFilter = null, districtFilter = null, selectedDate, selectedDayIndex = 0 }) {
   const [floodData, setFloodData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  
+  // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [pageInput, setPageInput] = useState(1); // สำหรับช่องกรอกเลขหน้า
+  const [pageInput, setPageInput] = useState(1);
 
-  // -------------------------
-  // Fetch Data
-  // -------------------------
+  // 1. Fetch Data
   useEffect(() => {
-    // จำลองการ Fetch (หรือใช้ URL จริงของคุณ)
+    setLoading(true);
     fetch("http://127.0.0.1:8000/FloodData")
       .then((res) => res.json())
-      .then((data) => setFloodData(data.data || []))
-      .catch((err) => console.error(err));
+      .then((data) => {
+        setFloodData(data.data || []);
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Error fetching data:", err);
+        setFloodData([]);
+        setLoading(false);
+      });
   }, []);
 
-
-  // -------------------------
-  // 2. Filter & Date Logic (DEMO 2024 Mode)
-  // -------------------------
+  // 2. Filter Logic (สูตรคำนวณย้อนหลังตาม Model Logic)
   const filteredData = useMemo(() => {
+    if (loading || floodData.length === 0) return [];
+
     let targetDateStr = "";
 
     if (selectedDate) {
       const d = new Date(selectedDate);
       
-      // ดึง เดือน และ วัน จากวันที่ที่เลือก
+      // -------------------------------------------------------------
+      // 🔥 LOGIC แก้ไขตามที่คุณอธิบาย:
+      // โมเดลทำนายวันที่ 29 -> T+1 คือ 30, T+2 คือ 1, T+3 คือ 2
+      // ดังนั้นถ้า User เลือกวันที่ 30 (Index 0) เราต้องย้อนกลับไปหา 29
+      // สูตร: วันที่เลือก - (Index + 1)
+      // -------------------------------------------------------------
+      d.setDate(d.getDate() - (selectedDayIndex + 1));
+
+      // แปลงเป็น String ปี 2024 เพื่อเทียบกับ Database (Demo Mode)
       const month = String(d.getMonth() + 1).padStart(2, '0');
       const day = String(d.getDate()).padStart(2, '0');
-
-      // 🔥 HARDCODE: บังคับให้เป็นปี 2024 เสมอ เพื่อดึงข้อมูล Demo
       targetDateStr = `2024-${month}-${day}`;
       
-      console.log("Selected:", selectedDate, "Filter use:", targetDateStr); // เช็คใน Console ดูได้
+      // console.log(`Button Index: ${selectedDayIndex}, Selected: ${selectedDate.getDate()}, Looking for Base Date: ${targetDateStr}`);
     }
 
     return floodData.filter((item) => {
       const provinceMatch = provinceFilter ? item.province === provinceFilter : true;
       const districtMatch = districtFilter ? item.district === districtFilter : true;
-
-      // เทียบกับ string "2024-MM-DD" ใน JSON
+      
+      // เทียบกับวันที่ Base Date (29) ที่เราคำนวณได้
       const dateMatch = targetDateStr ? item.date === targetDateStr : true;
 
       return provinceMatch && districtMatch && dateMatch;
     });
-  }, [floodData, provinceFilter, districtFilter, selectedDate]);
+  }, [floodData, provinceFilter, districtFilter, selectedDate, selectedDayIndex, loading]);
 
-  // -------------------------
-  // Pagination Logic
-  // -------------------------
+  // 3. Pagination Logic
   const totalItems = filteredData.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
   const startIdx = (currentPage - 1) * itemsPerPage;
   const paginatedData = filteredData.slice(startIdx, startIdx + itemsPerPage);
 
-  // Reset หน้าเมื่อ Filter เปลี่ยน
   useEffect(() => {
     setCurrentPage(1);
     setPageInput(1);
-  }, [provinceFilter, districtFilter, itemsPerPage, selectedDate]);
+  }, [provinceFilter, districtFilter, itemsPerPage, selectedDate, selectedDayIndex]);
 
-  // Handle เปลี่ยนหน้าด้วยการพิมพ์
-  const handlePageInputChange = (e) => {
-    const val = e.target.value;
-    setPageInput(val);
-    const num = Number(val);
-    if (num >= 1 && num <= totalPages) {
-      setCurrentPage(num);
+  const changePage = (direction) => {
+    let newPage = currentPage + direction;
+    if (newPage >= 1 && newPage <= totalPages) {
+      setCurrentPage(newPage);
+      setPageInput(newPage);
     }
   };
 
-  // Handle ปุ่มลูกศร
-  const changePage = (direction) => {
-    let newPage = currentPage + direction;
-    if (newPage < 1) newPage = 1;
-    if (newPage > totalPages) newPage = totalPages;
-    setCurrentPage(newPage);
-    setPageInput(newPage);
+  const handlePageInput = (e) => {
+    const val = Number(e.target.value);
+    setPageInput(e.target.value);
+    if (val >= 1 && val <= totalPages) setCurrentPage(val);
   };
 
-  // -------------------------
-  // Helper: Status Style
-  // -------------------------
+  // 4. Status Logic (เลือก T+1, T+2, T+3 ให้ตรงกับปุ่ม)
   const getStatusInfo = (item) => {
-    const preds = [
-      item["Flood_T+1_Pred"],
-      item["Flood_T+2_Pred"],
-      item["Flood_T+3_Pred"]
-    ].filter((v) => v !== undefined && v !== null);
+    const p1 = item["Flood_T+1_Pred"]; // ผลลัพธ์ของ T+1 (วันที่ 30)
+    const p2 = item["Flood_T+2_Pred"]; // ผลลัพธ์ของ T+2 (วันที่ 1)
+    const p3 = item["Flood_T+3_Pred"]; // ผลลัพธ์ของ T+3 (วันที่ 2)
 
-    // เช็คเงื่อนไข (ปรับตาม Business Logic ของคุณ)
-    if (preds.some((p) => p === 2)) return { label: "เกิดน้ำท่วม", className: "status-flood" };
-    if (preds.some((p) => p === 1)) return { label: "เฝ้าระวัง", className: "status-warning" };
+    let targetValue;
+
+    // ถ้ากดปุ่มแรก (Index 0) -> โชว์ค่า T+1
+    if (selectedDayIndex === 0) {
+        targetValue = p1; 
+    } 
+    // ถ้ากดปุ่มสอง (Index 1) -> โชว์ค่า T+2
+    else if (selectedDayIndex === 1) {
+        targetValue = p2; 
+    } 
+    // ถ้ากดปุ่มสาม (Index 2) -> โชว์ค่า T+3
+    else {
+        targetValue = p3; 
+    }
+
+    if (targetValue === 2) return { label: "เกิดน้ำท่วม", className: "status-flood" };
+    if (targetValue === 1) return { label: "เฝ้าระวัง", className: "status-warning" };
     return { label: "ปกติ", className: "status-normal" };
   };
 
-  // -------------------------
-  // Helper: Date Format (ไทย)
-  // -------------------------
+  // Helper date format
   const formatDateThai = (dateInput) => {
-    if (!dateInput) return "ข้อมูลล่าสุด";
+    if (!dateInput) return "-";
     const d = new Date(dateInput);
-    if (isNaN(d)) return dateInput;
-    return d.toLocaleDateString("th-TH", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
-    });
+    if (isNaN(d.getTime())) return "-";
+    return d.toLocaleDateString("th-TH", { day: "numeric", month: "long", year: "numeric" });
   };
 
   return (
     <div className="prediction-wrapper">
-      {/* Table Card */}
       <div className="table-card">
         <div className="table-responsive">
           <table className="custom-table">
             <thead>
               <tr>
-                <th style={{ width: "20%", textAlign: "center" }}>จังหวัด</th>
-                <th style={{ width: "20%", textAlign: "center" }}>อำเภอ</th>
-                <th style={{ width: "30%", textAlign: "center" }}>ตำบล</th>
-                <th style={{ width: "30%", textAlign: "center" }}>สถานการณ์</th>
+                <th style={{ width: "25%" }}>จังหวัด</th>
+                <th style={{ width: "25%" }}>อำเภอ</th>
+                <th style={{ width: "25%" }}>ตำบล</th>
+                <th style={{ width: "25%", textAlign: "center" }}>สถานการณ์</th>
               </tr>
             </thead>
             <tbody>
-              {paginatedData.length > 0 ? (
+              {loading ? (
+                <tr><td colSpan="4" className="no-data">กำลังโหลดข้อมูล...</td></tr>
+              ) : paginatedData.length > 0 ? (
                 paginatedData.map((item, idx) => {
                   const status = getStatusInfo(item);
                   return (
@@ -146,65 +156,38 @@ export default function Prediction({ provinceFilter = null, districtFilter = nul
               ) : (
                 <tr>
                   <td colSpan="4" className="no-data">
-                    ไม่พบข้อมูล
+                    ไม่พบข้อมูลสำหรับวันที่ {formatDateThai(selectedDate)}
                   </td>
                 </tr>
               )}
             </tbody>
           </table>
         </div>
-
+        
         {/* Footer */}
         <div className="table-footer">
           <div className="footer-left">
             <span>จำนวนแถวต่อหน้า</span>
-            <select
-              className="items-select"
-              value={itemsPerPage}
-              onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            >
+            <select className="items-select" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
               <option value={10}>10</option>
               <option value={20}>20</option>
               <option value={50}>50</option>
             </select>
           </div>
-
           <div className="footer-right">
-            <span className="showing-text">
-              แสดงรายการ {totalItems === 0 ? 0 : startIdx + 1}-{Math.min(startIdx + itemsPerPage, totalItems)} จาก {totalItems} รายการ
-            </span>
-            
+            <span className="showing-text">แสดง {totalItems === 0 ? 0 : startIdx + 1}-{Math.min(startIdx + itemsPerPage, totalItems)} จาก {totalItems}</span>
             <div className="pagination-controls">
-              <button 
-                className="page-btn" 
-                onClick={() => changePage(-1)} 
-                disabled={currentPage === 1}
-              >
-                ←
-              </button>
-              <input 
-                type="number" 
-                className="page-input" 
-                value={pageInput} 
-                onChange={handlePageInputChange}
-                min={1}
-                max={totalPages}
-              />
-              <button 
-                className="page-btn" 
-                onClick={() => changePage(1)} 
-                disabled={currentPage === totalPages}
-              >
-                →
-              </button>
+              <button className="page-btn" onClick={() => changePage(-1)} disabled={currentPage === 1}>←</button>
+              <input type="number" className="page-input" value={pageInput} onChange={handlePageInput} />
+              <button className="page-btn" onClick={() => changePage(1)} disabled={currentPage === totalPages}>→</button>
             </div>
           </div>
         </div>
       </div>
-
-      {/* Date Text Outside */}
+      
+      {/* ส่วนวันที่ด้านล่าง */}
       <div className="update-label">
-        อัพเดทข้อมูลล่าสุด วันที่ {formatDateThai(selectedDate || new Date())}
+        ข้อมูลพยากรณ์ประจำวันที่ {formatDateThai(selectedDate || new Date())}
       </div>
     </div>
   );
