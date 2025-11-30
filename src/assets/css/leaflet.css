@@ -1,8 +1,16 @@
+/* --- User Provided Styles (Sidebar & Inputs) --- */
 
+
+.sidebar-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1; /* ให้ขยายเต็มที่ใน sidebar */
+}
 
 .sidebar-group select {
   width: 100%;           /* ขยายเต็ม group */
-  height: 36px;
+  height: 36px;          /* ปรับให้พอดีกับปุ่ม */
   padding: 6px 8px;
   font-size: 14px;
   border: 1px solid #ccc;
@@ -18,6 +26,12 @@
   box-shadow: 0 0 4px rgba(63, 81, 181, 0.3);
 }
 
+.sidebar-group label {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
 /* Button */
 .sidebar-group button {
   width: 100%;           /* ขยายเท่ากับ select */
@@ -26,85 +40,85 @@
   font-weight: 600;
   border: none;
   border-radius: 6px;
-  background-color: #c9d8ea;
+  background-color: #c9d8ea; /* สีฟ้าเทาเดิม */
   color: #232222;
   cursor: pointer;
   transition: 0.2s all;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
 }
 
 .sidebar-group button:hover {
   background-color: #b1b8e8;
 }
 
-/* button group fix */
-.button-group {
-  display: flex;               /* ต้องมี */
-  flex-direction: row !important; /* ให้วางแนวนอน */
-  align-items: center;         /* จัดกลางตามแกน Y */
-  justify-content: flex-start; /* จัดชิดซ้าย ถ้าต้องการ */
-  gap: 12px;                   /* ช่องว่างระหว่างปุ่ม/element */
-}
-
-.sidebar.horizontal label {
-  margin: 0;
-}
-.sidebar-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  flex: 1; /* ให้ขยายเต็มที่ใน sidebar */
-}
-
-.sidebar.horizontal select,
-.sidebar.horizontal button {
-  height: 30px;
-  padding: 4px 6px;
-  font-size: 12px;
-  flex-shrink: 0; /* ป้องกันถูกบีบ */
-}
-
-/* Map vertical layout */
-.map-layout-vertical {
-  display: flex;
-  flex-direction: column;
-  height: 500px;
-  width: 100%;
-}
-
-.map-layout-horizontal {
-  display: flex;
-  flex-direction: row; /* sidebar + map */
-  height: 500px;       /* หรือ 100vh */
-  width: 100%;
-}
-
-.map-layout-horizontal .leaflet-container {
-  flex: 1;
-  min-height: 0;
-}
-
-.sidebar.horizontal button {
-  margin: 0; /* เอา margin-top ของปุ่มออก */
-}
-
 .sidebar.horizontal {
   display: flex;
-  flex-direction: row; /* ให้อยู่แนวตั้ง */
-  align-items: center; /* จัดกลางตามแกน Y */
-  gap: 12px;              /* ช่องว่างระหว่าง group */
-  padding: 8px;
-  background: transparent;
-  width: auto;           /* กำหนดขนาด sidebar */
-  flex-shrink: 0;
+  flex-direction: row; 
+  align-items: flex-end; /* จัดให้ Input กับ Button เสมอกันด้านล่าง */
+  gap: 20px;              
+  flex-wrap: wrap;
+  width: 100%;
 }
 
+/* --- Container & Layout Styles (Converted from Inline) --- */
 
-.sidebar-group select,
-.sidebar-group button {
-  height: 30px;
-  font-size: 12px;
-  padding: 4px 6px;
-  min-width: 120px;
-  width: 100%;           /* ให้เต็ม group */
-  box-sizing: border-box;
+.river-map-container {
+  padding: 20px;
+  background-color: #f4f6f9; /* สีพื้นหลังเทาอ่อน */
+  height: 75vh;
+  display: flex;
+  flex-direction: column;
+  font-family: 'Sarabun', sans-serif;
+}
+
+.map-card-header {
+  background-color: white;
+  border-radius: 15px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+  margin-bottom: 15px;
+}
+
+.map-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: bold;
+  color: #333;
+}
+
+.map-display-area {
+  flex: 1;
+  position: relative;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+/* --- Legend Styles --- */
+.map-legend-container {
+  margin-top: 15px;
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  background-color: white;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+}
+
+.legend-color-box {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
 }

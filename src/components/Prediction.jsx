@@ -7,7 +7,7 @@ export default function Prediction({ provinceFilter = null, districtFilter = nul
   
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(15);
   const [pageInput, setPageInput] = useState(1);
 
   // 1. Fetch Data
@@ -169,8 +169,8 @@ export default function Prediction({ provinceFilter = null, districtFilter = nul
           <div className="footer-left">
             <span>จำนวนแถวต่อหน้า</span>
             <select className="items-select" value={itemsPerPage} onChange={(e) => setItemsPerPage(Number(e.target.value))}>
-              <option value={10}>10</option>
-              <option value={20}>20</option>
+              <option value={15}>15</option>
+              <option value={25}>25</option>
               <option value={50}>50</option>
             </select>
           </div>

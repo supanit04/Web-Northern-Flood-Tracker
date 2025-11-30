@@ -4,7 +4,7 @@
 .prediction-wrapper {
   font-family: 'Sarabun', sans-serif;
   width: 100%;
-  max-width: 950px;
+  max-width: 750px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -17,6 +17,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  width: 800px;
 }
 
 /* Table Responsive */

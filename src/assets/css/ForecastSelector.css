@@ -1,52 +1,43 @@
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap');
 
-/* --- Wrapper หลัก: จัดเรียงซ้ายขวา --- */
+/* --- Wrapper หลัก --- */
 .forecast-wrapper {
   font-family: 'Sarabun', sans-serif;
   display: flex;
-  gap: 20px;
+  gap: 15px;              /* ลดช่องว่างระหว่างการ์ดซ้าย-ขวา (เดิม 20px) */
   width: 100%;
-  max-width: 1000px; /* ขยายความกว้างรวม */
+  max-width: 1700px;
+  /* max-height: 300px;  <-- ลบออก หรือปล่อยให้ auto เพื่อความยืดหยุ่น */
   margin: 0 auto;
-  align-items: stretch; /* ให้ความสูงเท่ากัน */
+  align-items: stretch;
 }
 
-/* responsive: จอเล็กให้เรียงลงมา */
+/* responsive */
 @media (max-width: 768px) {
   .forecast-wrapper {
     flex-direction: column;
   }
 }
 
-/* ... CSS เดิม ... */
-
-/* --- Card พื้นฐาน --- */
+/* --- Card พื้นฐาน (ปรับให้เล็กลง) --- */
 .forecast-card {
   background-color: #ffffff;
   border-radius: 16px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  padding: 20px 24px;
+  padding: 15px 15px;     /* 🔥 ลด Padding ลง (เดิม 20px 24px) */
   border: 1px solid #f0f0f0;
-  margin-bottom: 20px;
-  margin-top:20px;
-  
-  /* ลบ flex: 1; ออกจากตรงนี้ แล้วไปใส่ใน class ย่อยด้านล่างแทน */
-  /* flex: 1;  <-- ลบ หรือ comment บรรทัดนี้ออก */
+  margin-top: 10px;       /* 🔥 ลด Margin บน-ล่าง */
+  margin-bottom: 10px;
 }
 
-/* ----------------------------------------------------- */
-/* กำหนดความกว้างตรงนี้ (ปรับตัวเลข flex ตามใจชอบ) */
-/* ----------------------------------------------------- */
-
-/* ฝั่งซ้าย: ปุ่มเลือกวันที่ */
+/* สัดส่วนการแบ่งซ้าย-ขวา */
 .selector-section {
-  flex: 2; /* กินพื้นที่ 2 ส่วน (ประมาณ 40%) */
+  flex: 2;
+  height: 140px;
 }
 
-/* ฝั่งขวา: แจ้งเตือน (ต้องการให้กว้างขึ้น) */
 .alert-section {
-  flex: 3; /* กินพื้นที่ 3 ส่วน (ประมาณ 60%) */
-  /* หรือถ้าอยากให้กว้างมากๆ ให้ใส่ flex: 4; */
+  flex: 3;
 }
 
 /* ------------------------------------- */
@@ -56,24 +47,23 @@
 .forecast-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin-bottom: 10px;    /* 🔥 ลดช่องว่างใต้หัวข้อ (เดิม 20px) */
 }
 
-/* ไอคอนดาวเหลือง */
 .forecast-icon-wrapper {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 30px;            /* 🔥 ลดขนาดไอคอน (เดิม 36px) */
+  height: 30px;
 }
 
 .forecast-icon-svg {
   width: 100%;
   height: 100%;
-  color: #fbbf24; /* yellow-400 */
+  color: #fbbf24;
   filter: drop-shadow(0 2px 2px rgba(251, 191, 36, 0.3));
 }
 
@@ -81,51 +71,53 @@
   position: absolute;
   color: white;
   font-weight: 700;
-  font-size: 14px;
+  font-size: 12px;        /* ลดขนาดตัวอักษรในไอคอน */
 }
 
 .forecast-title {
-  font-size: 18px;
+  font-size: 16px;        /* 🔥 ลดขนาดหัวข้อ (เดิม 18px) */
   font-weight: 700;
   color: #000;
   margin: 0;
 }
 
-/* List ของปุ่ม (เรียงแนวตั้ง) */
+/* List ปุ่ม */
 .forecast-list {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-direction: row;    /* แนวนอน */
+  gap: 100px;               /* 🔥 ลดช่องว่างระหว่างปุ่ม (เดิม 12px) */
+  flex-wrap: wrap;
 }
 
-/* ตัวปุ่ม */
+/* ตัวปุ่ม (ปรับให้เล็กกระชับ) */
 .forecast-btn {
-  width: 100%;
-  padding: 12px 20px;
-  border-radius: 12px;
+  flex: 1;
+  min-width: 100px;       /* ลดความกว้างขั้นต่ำ */
+  
+  padding: 8px 10px;      /* 🔥 ลด Padding ปุ่ม (เดิม 12px 20px) */
+  border-radius: 10px;
   border: none;
   cursor: pointer;
-  background-color: #eff6ff; /* สีฟ้าอ่อนมาก (Unselected) */
+  background-color: #eff6ff;
   color: #1e293b;
-  text-align: left; /* จัดชิดซ้าย หรือ center ตามรูป */
+  text-align: center;
   display: flex;
-  justify-content: center; /* ในรูปตัวหนังสืออยู่ตรงกลาง */
+  justify-content: center;
+  align-items: center;    /* จัดกลางแนวตั้ง */
   transition: all 0.2s;
-  font-size: 16px;
+  font-size: 14px;        /* 🔥 ลดขนาดตัวหนังสือ (เดิม 16px) */
 }
 
 .forecast-btn .btn-text {
   font-weight: 500;
 }
 
-/* State: Hover */
 .forecast-btn:hover {
   background-color: #dbeafe;
 }
 
-/* State: Selected (ตามรูปเป็นสีฟ้าเข้มขึ้น มีเงา) */
 .forecast-btn.selected {
-  background-color: #a5b4fc; /* สีฟ้าอมม่วง ตามรูป */
+  background-color: #a5b4fc;
   color: #000;
   font-weight: 600;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -138,16 +130,16 @@
 .alert-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 8px;
+  margin-bottom: 8px;     /* ลดช่องว่าง */
 }
 
 .siren-icon {
-  font-size: 30px;
+  font-size: 24px;        /* 🔥 ลดขนาดไอคอนไซเรน (เดิม 30px) */
 }
 
 .alert-title {
-  font-size: 25px;
+  font-size: 20px;        /* 🔥 ลดขนาดหัวข้อ (เดิม 25px) */
   font-weight: 700;
   color: #000;
   margin: 0;
@@ -157,17 +149,17 @@
   border: 0;
   height: 1px;
   background: #e2e8f0;
-  margin-bottom: 16px;
+  margin-bottom: 10px;    /* ลดช่องว่างเส้นคั่น */
 }
 
 .alert-content {
   color: #000;
-  font-size: 20px;
-  line-height: 1.5;
+  font-size: 16px;        /* 🔥 ลดขนาดเนื้อหา (เดิม 20px) */
+  line-height: 1.4;
 }
 
 .alert-content strong {
-  font-size: 25px;
+  font-size: 18px;        /* 🔥 ลดขนาดตัวหนา (เดิม 25px) */
   display: block;
   margin-bottom: 4px;
 }
