@@ -134,8 +134,8 @@ export default function RiverStations({
   // 🟦 โหลดข้อมูลจาก Backend
   useEffect(() => {
     setLoading(true);
-    fetch("https://back-northern-flood-tracker.onrender.com/RiverData")
-    // fetch("http://127.0.0.1:8000/RiverData")
+    // fetch("https://back-northern-flood-tracker.onrender.com/RiverData")
+    fetch("http://127.0.0.1:8000/RiverData")
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "ok") {
