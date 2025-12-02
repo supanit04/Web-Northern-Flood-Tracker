@@ -18,8 +18,8 @@ function Header() {
       <div className="logo-area">
         <img src="/mfu-logo.png" alt="โลโก้" width={50} height={50} />
         <div className="title">
-          <div className="th text-white">ติดตามสถานการณ์อุทกภัยภาคเหนือของประเทศไทย</div>
-          <div className="en text-white ">Northern Flood Forecasting System</div>
+          <div className="th text-white">ติดตามสถานการณ์อุทกภัยภาคเหนือของประเทศไทย by Machine Learning</div>
+          <div className="en text-white ">Northern Flood Forecasting System by Machine Learning</div>
         </div>
       </div>
 
@@ -46,8 +46,8 @@ function Footer() {
         <div className="footer-left">
           <img src="public/rain.png" alt="logo-web" width={50} />
           <div className="text">
-            <h3 className="footer-title"> Northern Flood Tracker</h3>
-          <p className="footer-subtext">ติดตามสถานการณ์อุทกภัยภาคเหนือ</p>
+            <h3 className="footer-title"> Northern Flood Forecasting System by Machine Learning</h3>
+          <p className="footer-subtext">ติดตามสถานการณ์อุทกภัยภาคเหนือ by Machine Learning</p>
           </div>
           
         </div>

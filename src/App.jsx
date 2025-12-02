@@ -39,9 +39,9 @@ function Home() {
       {/* 1. Forecast Selector (เลือกวัน) */}
       <section className="pt-6 px-2 flex  justify-center pb-4">
          <ForecastSelector 
-            selectedDate={selectedDate} 
-            onDateSelect={setSelectedDate} 
-            onDayIndexSelect={setSelectedDayIndex} 
+            selectedDate={selectedDate}
+            onDateSelect={setSelectedDate}
+            onDayIndexSelect={setSelectedDayIndex}
          />
       </section>
 
