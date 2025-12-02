@@ -3,7 +3,7 @@ import "../assets/css/ForecastSelector.css";
 
 export default function ForecastSelector({ selectedDate, onDateSelect, onDayIndexSelect }) {
 
-  const today = new Date();
+  const today = new Date(2024, 9, 15); // ตั้งค่าเป็นวันที่ 15 ตุลาคม 2024
   const days = [0, 1, 2].map(offset => {
     const d = new Date(today);
     d.setDate(today.getDate() + offset);
